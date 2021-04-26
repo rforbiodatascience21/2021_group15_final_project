@@ -3,8 +3,8 @@ rm(list = ls())
 
 
 # Load libraries ----------------------------------------------------------
-library("tidyverse")
-library("writexl")
+library(tidyverse)
+library(readxl)
 
 # Load data ---------------------------------------------------------------
 pbc_data <- read_xlsx("data/_raw/pbc.xlsx")
@@ -29,8 +29,8 @@ pbc_data <- pbc_data %>%
 # Round off variables -----------------------------------------------------
 
 # round down age to whole years
-pbc_data <- pbc_data %>% 
-  mutate(age = floor(age))
+#pbc_data <- pbc_data %>% 
+#  mutate(age = floor(age))
 
 # round off numeric columns
 pbc_data <- pbc_data %>% 

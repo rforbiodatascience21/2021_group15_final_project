@@ -4,7 +4,8 @@ rm(list = ls())
 
 # Load libraries ----------------------------------------------------------
 library(tidyverse)
-library(readxl) # a part of the tidyverse installation 
+library(readxl) # a part of the tidyverse installation
+library(writexl)
 
 
 # Load data ---------------------------------------------------------------
