@@ -4,10 +4,9 @@ rm(list = ls())
 
 # Load libraries ----------------------------------------------------------
 library(tidyverse)
-library(readxl)
 
 # Load data ---------------------------------------------------------------
-pbc_data <- read_xlsx("data/_raw/pbc.xlsx")
+pbc_data <- read_csv("data/01_pbc_data.csv")
 
 
 # Remove non-trial subjects -----------------------------------------------
