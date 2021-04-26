@@ -4,7 +4,6 @@ rm(list = ls())
 
 # Load libraries ----------------------------------------------------------
 library(tidyverse)
-library(writexl)
 
 # Load data ---------------------------------------------------------------
 pbc_data_clean <- read_csv("data/02_pbc_data_clean.csv")
@@ -58,6 +57,5 @@ pbc_data_clean <- pbc_data_clean %>%
   relocate(end_age, .after = age)
 
 
-
-
-str(pbc_data_clean)
+# Write data --------------------------------------------------------------
+write_csv(x = pbc_data_clean, file = "data/03_pbc_data_aug.csv")
