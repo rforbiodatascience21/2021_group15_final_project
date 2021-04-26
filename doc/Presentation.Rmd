@@ -1,6 +1,7 @@
 ---
-title: "Presentation"
-author: "Group 15"
+title: "22100 - R for Bio Data Science"
+subtitle: "Group 15 Final project"
+author: "Ella Hedeboe(s211253), Lene Christiansen(s163628), Michelle Anker Pihl(s174347) and Mie Guldhammer Andersen(s174343)"
 output: ioslides_presentation
 ---
 
