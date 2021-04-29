@@ -1,4 +1,5 @@
 ## Mie leger med clustering
+#This section is based on this article: https://www.tidymodels.org/learn/statistics/k-means/ 
 
 # Clear workspace ---------------------------------------------------------
 rm(list = ls())
@@ -9,35 +10,37 @@ library(tidyverse)
 library(ggplot2)
 library(tidymodels)
 
-#library(broom)
-#library(purrr)
 
 # Load data ---------------------------------------------------------------
 pbc_data_aug <- read_csv("data/03_pbc_data_aug.csv")
 
 
-# fix factor
+# Fix factor ----------------------(SKAL ÆNDRES)----------------------
 pbc_data_aug <- pbc_data_aug %>% 
   mutate(status = factor(status, levels = c(0,1))) %>% 
   mutate(stage = factor(stage, levels = c(1,2,3,4)))
 
 
 
-# K-means
-#This section is based on this article: https://www.tidymodels.org/learn/statistics/k-means/ 
+# Exploratory plot to see if any cluster tendencies -----------------------
 pbc_data_aug %>% 
   ggplot(mapping = aes(x = mayo_risk, y=albumin,color = stage)) +
   geom_point(alpha=0.5)
 
-#No clear clustering tendencies. 
+# No clear clustering tendencies. 
 
-#We’ll use the built-in kmeans() function, which accepts a data frame with all numeric columns as it’s primary argument.
+
+# Data wrangling  ---------------------------------------------------------
+# We will use the  kmeans() function. 
+# It accepts a data frame only with all numeric columns.
+
+# Remove the stage column, since this is the one we are interested in. 
 kclust_data <- 
   pbc_data_aug %>% 
-  select(-stage,-mayo_risk_level)
+  select(-stage)
 
 
-## change chr columns
+# change non numeric columns to numeric
 kclust_data <- kclust_data %>% 
   mutate(sex = case_when(sex == "female" ~ 0,
                                  sex == "male" ~ 1)) %>% 
@@ -48,20 +51,126 @@ kclust_data <- kclust_data %>%
   mutate(ascites = case_when(ascites == "absent" ~ 0,
                              ascites == "present" ~ 1)) %>% 
   mutate(drug = case_when(drug == "placebo" ~ 0,
-                         drug == "D-penicillamine" ~ 1))
+                         drug == "D-penicillamine" ~ 1)) %>% 
+  mutate(mayo_risk_level = case_when(mayo_risk_level == "low risk" ~ 0,
+                                     mayo_risk_level == "medium risk" ~ 1,
+                                     mayo_risk_level == "high risk" ~ 2))
 
 
-
-
-# k clustering with 4 clusters
+# K clustering with 4 clusters --------------------------------------------
 kclust <- kmeans(kclust_data, centers = 4)
 kclust
 
-#The output is a list of vectors. 
-#The cluster contains information about each point.
-#centers, withinss and size contain information about each cluster.
-#totss, tot.withinss, betweenss and iter contain information about the full clustering. 
+# The output is a list of vectors. 
+# The cluster contains information about each point.
+# centers, withinss and size contain information about each cluster.
+# totss, tot.withinss, betweenss and iter contain information about the full clustering. 
 
+
+
+# Plot only for 4 clusters ------------------------------------------------
+
+kclusts <- 
+  tibble(k = 4) %>%
+  mutate(
+    kclust = map(k, ~kmeans(kclust_data, .x)),
+    tidied = map(kclust, tidy),
+    glanced = map(kclust, glance),
+    augmented = map(kclust, augment, kclust_data)
+  )
+kclusts
+
+#We can turn these into three separate data sets 
+clusters <- 
+  kclusts %>%
+  unnest(cols = c(tidied))
+
+assignments <- 
+  kclusts %>% 
+  unnest(cols = c(augmented))
+
+clusterings <- 
+  kclusts %>%
+  unnest(cols = c(glanced))
+
+
+# Plot the original points using the data from augment(), 
+# with each point colored according to the predicted cluster.
+
+p1 <- 
+  ggplot(assignments, aes(x = mayo_risk, y = copper)) +
+  geom_point(aes(color = .cluster), alpha = 0.8) + 
+  facet_wrap(~ k)
+p1
+
+# Add centers of the cluster:
+p2 <- p1 + geom_point(data = clusters, size = 10, shape = "x")
+p2
+
+
+
+# Plot 1-4 clusters -------------------------------------------------------
+
+kclusts <- 
+  tibble(k = 1:4) %>%
+  mutate(
+    kclust = map(k, ~kmeans(kclust_data, .x)),
+    tidied = map(kclust, tidy),
+    glanced = map(kclust, glance),
+    augmented = map(kclust, augment, kclust_data)
+  )
+
+kclusts
+
+
+#We can turn these into three separate data sets 
+clusters <- 
+  kclusts %>%
+  unnest(cols = c(tidied))
+
+assignments <- 
+  kclusts %>% 
+  unnest(cols = c(augmented))
+
+clusterings <- 
+  kclusts %>%
+  unnest(cols = c(glanced))
+
+
+# Now we can plot the original points using the data from augment(), 
+# with each point colored according to the predicted cluster.
+
+p1 <- 
+  ggplot(assignments, aes(x = mayo_risk, y = albumin)) +
+  geom_point(aes(color = .cluster), alpha = 0.8) + 
+  facet_wrap(~ k)
+p1
+
+
+#Here we can see that there are still no really good clustering. 
+
+#We can then add centers of the cluster using the data from tidy():
+
+p2 <- p1 + geom_point(data = clusters, size = 10, shape = "x")
+p2
+
+
+# Variance ----------------------------------------------------------------
+
+# The data from glance() fills a different but equally important purpose; 
+# it lets us view trends of some summary statistics across values of k. Of particular interest is the total within sum of squares, saved in the tot.withinss column.
+
+ggplot(clusterings, aes(k, tot.withinss)) +
+  geom_line() +
+  geom_point()
+
+#This represents the variance within the clusters. It decreases as k increases.
+
+#If there is a bend, as in the article. The bend indicates that additional clusters beyond have little value. 
+
+
+
+# Random ------------------------------------------------------------------
 
 #Which of these do we want to extract? 
 #There is no right answer; each of them may be interesting to an analyst.
