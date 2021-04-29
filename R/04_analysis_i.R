@@ -116,6 +116,20 @@ pbc_data_aug %>%
   geom_bar(position = "dodge")
 
 
+
+pbc_data_aug %>% 
+  ggplot(mapping = aes(x = platelet, y = protime, color = stage)) +
+  geom_point()
+
+
+pbc_data_aug %>% 
+  ggplot(mapping = aes(x = spiders, fill = status)) +
+  geom_bar(position = "dodge")
+  
+
+
+
+
 # survival time
 
 # get row names ordered by number of follow up days

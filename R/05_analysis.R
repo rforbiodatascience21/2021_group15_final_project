@@ -85,6 +85,7 @@ pca_fit %>%
 
 # Logistic regression -----------------------------------------------------
 
+# create logistic regression model with status as the outcome variable
 model <- pbc_data_aug %>% 
   glm(status ~ .,
       data = .,
@@ -92,6 +93,3 @@ model <- pbc_data_aug %>%
 
 model_tidy <- tidy(model, conf.int = TRUE)
 
-model_tidy
-
-model_tidy %>% filter(p.value < 0.05)
