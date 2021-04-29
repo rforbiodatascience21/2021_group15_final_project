@@ -10,6 +10,13 @@ pbc_data_clean <- read_csv("data/02_pbc_data_clean.csv")
 
 # Calculate Mayo Risk score -----------------------------------------------
 
+# to use the "join" functions we create a separate data frame containing the risk score
+# the two data frames must be joined by a shared column so we create a column with row number in the data set
+
+# create column with row number
+pbc_data_clean <- pbc_data_clean %>% 
+  mutate(row_number = rownames(.))
+
 # create edema score column
 pbc_data_clean <- pbc_data_clean %>% 
   mutate(edema_score = case_when(edema == "no edema" ~ 0,
@@ -17,16 +24,18 @@ pbc_data_clean <- pbc_data_clean %>%
                                  edema == "edema despite diuretic therapy" ~ 1)) %>% 
   relocate(edema_score, .after = edema)
 
-pbc_data_clean <- pbc_data_clean %>% 
+# calculate risk score
+risk_score <- pbc_data_clean %>%
   mutate(mayo_risk = 
            0.04 * age + 
            10.87 * log(bili) - 
            22.53 * log(albumin) +
            12.38 * log(protime) +
-           10.86 * edema_score)
+           10.86 * edema_score) %>% 
+  select(row_number, mayo_risk)
 
 # convert to risk level
-pbc_data_clean <- pbc_data_clean %>%
+risk_score <- risk_score %>%
   mutate(
     mayo_risk_level = case_when(
       mayo_risk < 8.5 ~ "low risk",
@@ -36,12 +45,15 @@ pbc_data_clean <- pbc_data_clean %>%
     )
   )
 
-pbc_data_clean <- pbc_data_clean %>%
+risk_score <- risk_score %>%
   mutate(mayo_risk_level = factor(mayo_risk_level,
                                   levels =  c("low risk",
                                               "medium risk",
                                               "high risk")))
 
+# join risk score with pbc data frame and remove row number column
+pbc_data_clean <- left_join(pbc_data_clean, risk_score, by = "row_number") %>%
+  select(-row_number)
 
 
 # Mutate edema column -----------------------------------------------------
