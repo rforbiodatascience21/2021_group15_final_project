@@ -1,7 +1,10 @@
 ---
 title: "22100 - R for Bio Data Science"
+
 subtitle: "Group 15 Final project"
-author: "Ella Hedeboe(s211253), Lene Christiansen(s163628), Michelle Anker Pihl(s174347) and Mie Guldhammer Andersen(s174343)"
+
+author: "Ella Hedeboe (s211253), Lene Christiansen (s163628), Michelle Anker Pihl (s174347) and Mie Guldhammer Andersen (s174343)"
+
 output: ioslides_presentation
 ---
 
@@ -9,23 +12,26 @@ output: ioslides_presentation
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## R Markdown
+## Presentation outline 
 
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+- Introduction to the data set
+- Data wrangling
+- Augmenting
+- Exploratory data analysis
+- Modelling the data
+- Conclusion
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+## The dataset
 
-## Slide with Bullets
+- A clinical trial in Primary Biliary Cirrhosis (PBC) conducted by the Mayo Clinic between 1974 and 1984
+- 312 participants all suffering from PBC (varying stages of disease severity)
+- Randomized, placebo-controlled clinical trial with the drug D-penicillamine
 
-- Bullet 1
-- Bullet 2
-- Bullet 3
+## Variables in the dataset
 
-## Slide with R Output
-
-```{r cars, echo = TRUE}
-summary(cars)
-```
+- Demographic characteristics: age and gender
+- Various physiological measurements e.g. serum bilirubin, albumin, protrombin time and presence of edema
+- Variables related to the trial: drug/placebo, status (dead/alive), number of follow-up days (until death or end of study participation)
 
 ## Slide with Plot
 
@@ -33,3 +39,7 @@ summary(cars)
 plot(pressure)
 ```
 
+## Hi
+<div class="red2">
+This text is red
+</div>
