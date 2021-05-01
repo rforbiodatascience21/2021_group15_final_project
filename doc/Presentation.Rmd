@@ -35,11 +35,6 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Slide with Plot
 
-```{r pressure}
-plot(pressure)
-```
+![Plot test](/cloud/project/results/plt_step_stage.png)
 
 ## Hi
-<div class="red2">
-This text is red
-</div>
