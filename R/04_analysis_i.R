@@ -414,8 +414,8 @@ plt_step_drug <- pbc_data_aug %>%
   geom_step(aes(x = fu.days, y = (312 - cumulative_count) / 312))  +
   theme_classic() +
   labs(
-    title = "Time to Death or Liver Transplantation in relation to the drugs",
-    x = "Time to Death or Liver Transplantation",
+    title = "Number of follow-up days in relation to the drugs",
+    x = "Time to Death, Liver Transplantation or end of follow-up",
     y = "Cumulative count",
     caption = "Data from https://hbiostat.org/data/"
   ) +
@@ -437,8 +437,8 @@ plt_step_stage <- pbc_data_aug %>%
   geom_step(aes(x = fu.days, y = (312 - cumulative_count) / 312)) +
   theme_classic() +
   labs(
-    title = "Time to Death or Liver Transplantation in relation to the 4 stages",
-    x = "Time to Death or Liver Transplantation",
+    title = "Number of follow-up days in relation to the 4 stages",
+    x = "Time to Death, Liver Transplantation or end of follow-up",
     y = "Cumulative count",
     caption = "Data from https://hbiostat.org/data/"
   ) +

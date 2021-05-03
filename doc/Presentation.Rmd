@@ -35,6 +35,9 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Slide with Plot
 
-![Plot test](/cloud/project/results/plt_step_stage.png)
+```{r out.width = "60%", fig.align = "center"}
+knitr::include_graphics("/cloud/project/results/plt_step_stage.png")
+```
 
-## Hi
+## Clustering
+
