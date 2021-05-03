@@ -1,7 +1,6 @@
 # Clear workspace ---------------------------------------------------------
 rm(list = ls())
 
-
 # Load libraries ----------------------------------------------------------
 library(tidyverse)
 
@@ -15,45 +14,39 @@ pbc_data_clean <- read_csv("data/02_pbc_data_clean.csv")
 
 # create column with row number
 pbc_data_clean <- pbc_data_clean %>% 
-  mutate(row_number = rownames(.))
+  mutate(row.number = rownames(.))
 
 # create edema score column
 pbc_data_clean <- pbc_data_clean %>% 
-  mutate(edema_score = case_when(edema == "no edema" ~ 0,
+  mutate(edema.score = case_when(edema == "no edema" ~ 0,
                                  edema == "edema, no diuretic therapy" ~ 0.5,
                                  edema == "edema despite diuretic therapy" ~ 1)) %>% 
-  relocate(edema_score, .after = edema)
+  relocate(edema.score, .after = edema)
 
 # calculate risk score
 risk_score <- pbc_data_clean %>%
-  mutate(mayo_risk = 
+  mutate(mayo.risk = 
            0.04 * age + 
            10.87 * log(bili) - 
            22.53 * log(albumin) +
            12.38 * log(protime) +
-           10.86 * edema_score) %>% 
-  select(row_number, mayo_risk)
+           10.86 * edema.score) %>% 
+  select(row.number, mayo.risk)
 
 # convert to risk level
 risk_score <- risk_score %>%
   mutate(
-    mayo_risk_level = case_when(
-      mayo_risk < 8.5 ~ "low risk",
-      8.5 <= mayo_risk &
-        mayo_risk <= 10 ~ "medium risk",
-      mayo_risk > 10 ~ "high risk"
+    mayo.risk.level = case_when(
+      mayo.risk < 8.5 ~ "low risk",
+      8.5 <= mayo.risk &
+        mayo.risk <= 10 ~ "medium risk",
+      mayo.risk > 10 ~ "high risk"
     )
   )
 
-risk_score <- risk_score %>%
-  mutate(mayo_risk_level = factor(mayo_risk_level,
-                                  levels =  c("low risk",
-                                              "medium risk",
-                                              "high risk")))
-
 # join risk score with pbc data frame and remove row number column
-pbc_data_clean <- left_join(pbc_data_clean, risk_score, by = "row_number") %>%
-  select(-row_number)
+pbc_data_clean <- left_join(pbc_data_clean, risk_score, by = "row.number") %>%
+  select(-row.number)
 
 
 # Mutate edema column -----------------------------------------------------
@@ -65,8 +58,8 @@ pbc_data_clean <- pbc_data_clean %>%
 
 # Create end age variable -------------------------------------------------
 pbc_data_clean <- pbc_data_clean %>% 
-  mutate(end_age = floor(age + (fu.days/365.25))) %>% 
-  relocate(end_age, .after = age)
+  mutate(end.age = floor(age + (fu.days/365.25))) %>% 
+  relocate(end.age, .after = age)
 
 
 # Write data --------------------------------------------------------------

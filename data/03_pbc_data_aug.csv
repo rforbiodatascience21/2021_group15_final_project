@@ -1,4 +1,4 @@
-bili,albumin,stage,protime,sex,fu.days,age,end_age,spiders,hepatom,ascites,alk.phos,sgot,chol,trig,platelet,drug,status,edema,diuretic,edema_score,copper,mayo_risk,mayo_risk_level
+bili,albumin,stage,protime,sex,fu.days,age,end.age,spiders,hepatom,ascites,alk.phos,sgot,chol,trig,platelet,drug,status,edema,diuretic,edema.score,copper,mayo.risk,mayo.risk.level
 14.5,2.6,4,12.2,female,400,58.77,59,present,present,present,1718,137.95,261,172,190,placebo,1,1,1,1,156,51.718900045329654,high risk
 1.1,4.14,3,10.6,female,4500,56.45,68,present,present,absent,7394.8,113.52,302,88,221,placebo,0,0,0,0,54,0.5131180883414892,low risk
 1.4,3.48,4,12,male,1012,70.07,72,absent,absent,absent,516,96.1,176,55,151,placebo,1,1,0,0.5,210,14.557759957440819,high risk

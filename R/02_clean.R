@@ -35,18 +35,6 @@ pbc_data <- pbc_data %>%
 pbc_data <- pbc_data %>% 
   mutate_if(is.numeric, round, digits = 2)
 
-
-# Convert to factors ------------------------------------------------------
-pbc_data <- pbc_data %>% 
-  mutate(sex = factor(sex, levels = c("male", "female")))
-
-pbc_data <- pbc_data %>%
-  mutate_at(., 
-            vars(spiders, hepatom, ascites), 
-            list(~ factor(., levels = c("absent", "present"))))
-
-str(pbc_data)
-
 # Write data --------------------------------------------------------------
 pbc_data_clean <- pbc_data
 
