@@ -5,8 +5,27 @@ subtitle: "Group 15 Final project"
 
 author: "Ella Hedeboe (s211253), Lene Christiansen (s163628), Michelle Anker Pihl (s174347) and Mie Guldhammer Andersen (s174343)"
 
-output: ioslides_presentation
+output:
+  ioslides_presentation:
+    widescreen: true
+    smaller: true
+
 ---
+
+<!-- <style> -->
+
+<!-- body > slides { -->
+<!--     padding: 0; -->
+<!--     margin: -35px 0 0 -270px; -->
+<!-- } -->
+
+<!-- slides > slide{ -->
+<!--     width: 100vw; -->
+<!--     height: 100vh; -->
+<!--     border-radius: 0; -->
+<!-- } -->
+
+<!-- </style> -->
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -27,17 +46,53 @@ knitr::opts_chunk$set(echo = FALSE)
 - 312 participants all suffering from PBC (varying stages of disease severity)
 - Randomized, placebo-controlled clinical trial with the drug D-penicillamine
 
+```{r out.width = "70%", fig.align = "center"}
+knitr::include_graphics("/cloud/project/results/plt_bar.png")
+```
+
 ## Variables in the dataset
 
 - Demographic characteristics: age and gender
 - Various physiological measurements e.g. serum bilirubin, albumin, protrombin time and presence of edema
 - Variables related to the trial: drug/placebo, status (dead/alive), number of follow-up days (until death or end of study participation)
 
-## Slide with Plot
+---
+```{r out.width = "100%", fig.align = "center"}
+knitr::include_graphics("/cloud/project/results/plt_histogram.png")
+```
 
+## Mayo risk score 
+
+Formula
+$$
+\small \text{Mayo risk score} = 0.04 \cdot \text{age in years} + 10.87 \cdot log(\text{serum bilirubin in mg/dL}) \\ \small - 22.53 \cdot log(\text{serum albumin in gm/dL}) + 12.38 \cdot log(\text{prothrombin time in seconds}) \\ \small + 10.86 \cdot \text{edema score}
+$$
+<!-- Convert to risk level  -->
+
+<!-- < 8.5: low risk  -->
+
+<!-- \> 8.5 & < 10: medium risk -->
+
+<!-- \> 10: high risk -->
+
+```{r out.width = "80%", fig.align = "center"}
+knitr::include_graphics("/cloud/project/results/plt_bar_mayo.png")
+```
+      
+## Exploratory data analysis
+
+---
+```{r out.width = "60%", fig.align = "center"}
+knitr::include_graphics("/cloud/project/results/plt_box_age.png")
+```
+
+---
 ```{r out.width = "60%", fig.align = "center"}
 knitr::include_graphics("/cloud/project/results/plt_step_stage.png")
 ```
 
 ## Clustering
 
+```{r out.width = "100%", fig.align = "center"}
+knitr::include_graphics("/cloud/project/results/plt_box_fu.png")
+```

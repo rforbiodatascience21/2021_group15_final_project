@@ -33,3 +33,4 @@ lm_tidy <- tidy(lm, conf.int = TRUE)
 # select p-values < 0.05
 lm_tidy %>% 
   filter(p.value < 0.05)
+

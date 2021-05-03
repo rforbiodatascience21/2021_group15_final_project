@@ -18,6 +18,40 @@ pbc_data_aug <- factor_columns(pbc_data_aug)
 
 # Exploratory data analysis -----------------------------------------------
 
+# Bar plots of data set overview
+bar1 <- pbc_data_aug %>%
+  ggplot(mapping = aes(x = stage)) +
+  geom_bar() +
+  theme_classic() +
+  labs(
+    title = "Barplot of participants in different stages",
+    x = "Disease stage",
+    y = "Count"
+  ) +
+  theme(
+    plot.title.position = "plot"
+  ) 
+
+bar2 <- pbc_data_aug %>%
+  ggplot(mapping = aes(x = drug)) +
+  geom_bar() +
+  theme_classic() +
+  labs(
+    title = "Barplot of participants in each treatment category",
+    x = "Treatment",
+    y = "Count",
+    caption = "Data from https://hbiostat.org/data/"
+  ) +
+  theme(
+    plot.caption = element_text(hjust = 1, face = "italic"),
+    plot.title.position = "plot",
+    plot.caption.position = "plot"
+  ) 
+  
+plt_bar <- bar1 | bar2 
+
+plots <- c("plt_bar")
+
 # Histograms of numeric variables
 pbc_numberic <- pbc_data_aug %>%
   select(where(is.numeric), drug) %>%
@@ -29,11 +63,12 @@ plt_histogram <- ggplot(gather(pbc_numberic, key, value, -c(drug)),
   #geom_histogram(mapping = aes(y = (..density..)), bins = 8) +
   facet_wrap(~ key, scales = 'free_x') +
   theme_classic() +
-  #scale_y_continuous(labels = scales::percent)+
   labs(title = "Histograms of numeric attributes in the data set",
+       x = "",
        y = "Count",
        caption = "Data from https://hbiostat.org/data/") +
   theme(
+    plot.title = element_text(size = 30),
     plot.caption = element_text(hjust = 1, face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot",
@@ -45,7 +80,7 @@ plt_histogram <- ggplot(gather(pbc_numberic, key, value, -c(drug)),
   ) +
   scale_fill_discrete(name = "Drug")
 
-plots <- c("plt_histogram")
+plots <- c(plots, "plt_histogram")
 
 # Box plot age vs. drug (stratified by sex)
 box1 <- pbc_data_aug %>%
@@ -438,7 +473,7 @@ invisible(mapply(
   ggsave,
   file = paste0("results/", names(l), ".png"),
   plot = l,
-  width = 10,
+  width = 12,
   height = 6
 ))
 
