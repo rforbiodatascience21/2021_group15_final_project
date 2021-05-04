@@ -95,3 +95,10 @@ knitr::include_graphics("/cloud/project/results/plt_step_stage.png")
 ```{r out.width = "100%", fig.align = "center"}
 knitr::include_graphics("/cloud/project/results/plt_box_fu.png")
 ```
+
+## Clustering variance
+Some notes: 
+This represents the variance within the clusters. It decreases as k increases.
+If there is a bend, as in the article. The bend indicates that additional clusters beyond have little value. 
+
+
