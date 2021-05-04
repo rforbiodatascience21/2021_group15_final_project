@@ -5,3 +5,4 @@ source(file = "R/03_augment.R")
 source(file = "R/04_analysis_i.R")
 source(file = "R/05_analysis_ii.R")
 
+rmarkdown::render('doc/Presentation.Rmd',output_file='Presentation.html')
