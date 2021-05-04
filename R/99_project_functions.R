@@ -1,3 +1,5 @@
+# Project specific functions ----------------------------------------------
+
 # Converting specific columns to factors
 factor_columns <- function(data) {
   data <- data %>% 
