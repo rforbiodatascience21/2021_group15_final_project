@@ -24,7 +24,7 @@ pbc_data_aug <- pbc_data_aug %>%
 
 # Exploratory plot to see if any cluster tendencies -----------------------
 pbc_data_aug %>% 
-  ggplot(mapping = aes(x = mayo_risk, y=albumin,color = status)) +
+  ggplot(mapping = aes(x = mayo.risk, y=albumin, color = status)) +
   geom_point(alpha=0.5)
 
 # Data wrangling  ---------------------------------------------------------
@@ -49,9 +49,9 @@ kclust_data <- kclust_data %>%
                              ascites == "present" ~ 1)) %>% 
   mutate(drug = case_when(drug == "placebo" ~ 0,
                           drug == "D-penicillamine" ~ 1)) %>% 
-  mutate(mayo_risk_level = case_when(mayo_risk_level == "low risk" ~ 0,
-                                     mayo_risk_level == "medium risk" ~ 1,
-                                     mayo_risk_level == "high risk" ~ 2))
+  mutate(mayo.risk.level = case_when(mayo.risk.level == "low risk" ~ 0,
+                                     mayo.risk.level == "medium risk" ~ 1,
+                                     mayo.risk.level == "high risk" ~ 2))
 
 
 # K clustering with 4 clusters --------------------------------------------
@@ -95,7 +95,7 @@ clusterings <-
 # with each point colored according to the predicted cluster.
 
 p1 <- 
-  ggplot(assignments, aes(x = mayo_risk, y = albumin)) +
+  ggplot(assignments, aes(x = mayo.risk, y = albumin)) +
   geom_point(aes(color = .cluster), alpha = 0.8) + 
   facet_wrap(~ k)
 p1
@@ -136,7 +136,7 @@ clusterings <-
 # with each point colored according to the predicted cluster.
 
 p1 <- 
-  ggplot(assignments, aes(x = mayo_risk, y = albumin)) +
+  ggplot(assignments, aes(x = mayo.risk, y = albumin)) +
   geom_point(aes(color = .cluster), alpha = 0.8) + 
   facet_wrap(~ k)
 p1

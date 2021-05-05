@@ -20,7 +20,7 @@ pbc_data_aug <- factor_columns(pbc_data_aug)
 
 # Bar plots of data set overview
 bar1 <- pbc_data_aug %>%
-  ggplot(mapping = aes(x = stage)) +
+  ggplot(mapping = aes(x = stage, fill = stage)) +
   geom_bar() +
   theme_classic() +
   labs(
@@ -33,7 +33,7 @@ bar1 <- pbc_data_aug %>%
   ) 
 
 bar2 <- pbc_data_aug %>%
-  ggplot(mapping = aes(x = drug)) +
+  ggplot(mapping = aes(x = drug, fill = drug)) +
   geom_bar() +
   theme_classic() +
   labs(

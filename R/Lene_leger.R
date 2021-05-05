@@ -103,7 +103,7 @@ p2
 ###### Alk.phos - PÆN 
 
 p1 <- 
-  ggplot(assignments, aes(x = alk.phos, y = mayo_risk)) +
+  ggplot(assignments, aes(x = alk.phos, y = mayo.risk, color = status)) +
   geom_point(aes(color = .cluster), alpha = 0.8) + 
   facet_wrap(~ k)
 p1
@@ -116,7 +116,7 @@ p2
 ###### Bili
 
 p1 <- 
-  ggplot(assignments, aes(x = bili, y = mayo_risk)) +
+  ggplot(assignments, aes(x = bili, y = mayo.risk)) +
   geom_point(aes(color = .cluster), alpha = 0.8) + 
   facet_wrap(~ k)
 p1
@@ -128,7 +128,7 @@ p2
 ###### fu.days
 
 p1 <- 
-  ggplot(assignments, aes(x = fu.days, y = mayo_risk)) +
+  ggplot(assignments, aes(x = fu.days, y = mayo.risk)) +
   geom_point(aes(color = .cluster), alpha = 0.8) + 
   facet_wrap(~ k)
 p1
@@ -136,4 +136,5 @@ p1
 # Add centers of the cluster:
 p2 <- p1 + geom_point(data = clusters, size = 10, shape = "x")
 p2
+
 

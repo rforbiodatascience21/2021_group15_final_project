@@ -74,7 +74,7 @@ assignments <-
 # with each point colored according to the predicted cluster.
 
 p1 <- 
-  ggplot(assignments, aes(x = mayo.risk, y = copper)) +
+  ggplot(assignments, aes(x = copper, y = mayo.risk)) +
   geom_point(aes(color = .cluster), alpha = 0.8)
 p1
 
@@ -113,7 +113,7 @@ clusterings <-
 # with each point colored according to the predicted cluster.
 
 p1 <- 
-  ggplot(assignments, aes(x = mayo.risk, y = albumin)) +
+  ggplot(assignments, aes(x = albumin, y = mayo.risk)) +
   geom_point(aes(color = .cluster), alpha = 0.8) + 
   facet_wrap(~ k)
 p1
@@ -130,3 +130,42 @@ p2
 ggplot(clusterings, aes(k, tot.withinss)) +
   geom_line() +
   geom_point()
+
+# Plot 1 to 4 clusters -------------------------------------------------------
+
+kclusts <- 
+  tibble(k = 1:4) %>%
+  mutate(
+    kclust = map(k, ~kmeans(kclust_data, .x)),
+    tidied = map(kclust, tidy),
+    glanced = map(kclust, glance),
+    augmented = map(kclust, augment, kclust_data)
+  )
+
+
+#We can turn these into three separate data sets 
+clusters <- 
+  kclusts %>%
+  unnest(cols = c(tidied))
+
+assignments <- 
+  kclusts %>% 
+  unnest(cols = c(augmented))
+
+clusterings <- 
+  kclusts %>%
+  unnest(cols = c(glanced))
+
+
+# Now we can plot the original points using the data from augment(), 
+# with each point colored according to the predicted cluster.
+
+p1 <- 
+  ggplot(assignments, aes(x = alk.phos, y = mayo.risk)) +
+  geom_point(aes(color = .cluster), alpha = 0.8) + 
+  facet_wrap(~ k)
+p1
+
+#We can then add centers of the cluster using the data from tidy():
+p2 <- p1 + geom_point(data = clusters, size = 10, shape = "x")
+p2
