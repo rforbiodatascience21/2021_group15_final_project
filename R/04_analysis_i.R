@@ -391,6 +391,30 @@ plt_box_fu2 <- box_fu1 / box_fu2 +
 
 plots <- c(plots, "plt_box_fu2")
 
+# Boxplot of time to death (stratified by status 1 and drug)
+plt_box_fu3 <- pbc_data_aug %>%
+  filter(status == 1) %>%
+  ggplot(mapping = aes(x = fu.days, y = status, fill = drug)) +
+  geom_boxplot(alpha = 0.5) +
+  theme_classic() +
+  labs(
+    title = "Number of follow-up days (stratified by status 1 and drug)",
+    x = "Follow-up days",
+    y = "",
+    caption = "Data from https://hbiostat.org/data/"
+  ) +
+  theme(
+    axis.text.y = element_blank(),
+    axis.ticks = element_blank(),
+    plot.caption = element_text(hjust = 1, face = "italic"),
+    plot.title.position = "plot",
+    plot.caption.position = "plot"
+  ) +
+  scale_fill_discrete(name = "Drug") +
+  scale_x_continuous(limits = c(0,5000))
+
+plots <- c(plots, "plt_box_fu3")
+
 # Barplot of number of participants for each status level (stratified by drug)
 plt_bar_drug <- pbc_data_aug %>%
   mutate(status = factor(status, levels = c(0, 1))) %>%
