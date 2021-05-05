@@ -55,7 +55,7 @@ knitr::include_graphics("/cloud/project/results/plt_bar.png")
 - Various physiological measurements e.g. serum bilirubin, albumin, protrombin time and presence of edema
 - Variables related to the trial: drug/placebo, status (dead/alive), number of follow-up days (until death or end of study participation)
 
----
+
 ```{r out.width = "100%", fig.align = "center"}
 knitr::include_graphics("/cloud/project/results/plt_histogram.png")
 ```
@@ -66,6 +66,8 @@ Formula
 $$
 \small \text{Mayo risk score} = 0.04 \cdot \text{age in years} + 10.87 \cdot log(\text{serum bilirubin in mg/dL}) \\ \small - 22.53 \cdot log(\text{serum albumin in gm/dL}) + 12.38 \cdot log(\text{prothrombin time in seconds}) \\ \small + 10.86 \cdot \text{edema score}
 $$
+Formula from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4419097/?fbclid=IwAR3A0iZyyxnWdG0mObdwS4U_HBocqfsYkWji50e_1M_2zeCZVFLO8WH3Qyo
+
 <!-- Convert to risk level  -->
 
 <!-- < 8.5: low risk  -->
@@ -74,7 +76,7 @@ $$
 
 <!-- \> 10: high risk -->
 
-```{r out.width = "80%", fig.align = "center"}
+```{r out.width = "60%", fig.align = "center"}
 knitr::include_graphics("/cloud/project/results/plt_bar_mayo.png")
 ```
       
