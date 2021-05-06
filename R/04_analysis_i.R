@@ -136,15 +136,20 @@ plt_bar_mayo <- pbc_data_aug %>%
     title = "Distribution of participants in the three Mayo risk score levels",
     x = "Mayo risk score level",
     y = "Percentage",
-    caption = "Data from https://hbiostat.org/data/"
+    caption = "Data from https://hbiostat.org/data/",
+    fill = "Mayo risk level"
   ) +
+  scale_fill_manual(labels = c("High risk: Mayo risk > 10", 
+                               "Medium risk: 8.5 < Mayo risk > 10",
+                               "Low risk: Mayo risk < 8.5"),
+                    values = c("blue", "red", "green"),
+                    limits = rev) +
   theme(
     plot.caption = element_text(hjust = 1, face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot",
-    legend.position = "none"
-  ) +
-  scale_fill_discrete(limits = rev)
+    legend.position = "right"
+  )
 
 plots <- c(plots, "plt_bar_mayo")
 
