@@ -15,20 +15,16 @@ pbc_data_aug <- read_csv("data/03_pbc_data_aug.csv")
 source("R/99_project_functions.R")
 
 # Wrangle data ------------------------------------------------------------
-# Create factor variables where it is needed
-kclust_data <- factor_columns(pbc_data_aug)
 
 # We will use the  kmeans() function, which only takes numeric columns
 # Change non numeric columns to numeric
-kclust_data <- kclust_data %>% 
+kclust_data <- pbc_data_aug %>% 
   mutate(sex = case_when(sex == "female" ~ 0,
                          sex == "male" ~ 1)) %>% 
-  mutate(spiders = case_when(spiders == "absent" ~ 0,
-                             spiders == "present" ~ 1)) %>% 
-  mutate(hepatom = case_when(hepatom == "absent" ~ 0,
-                             hepatom == "present" ~ 1)) %>% 
-  mutate(ascites = case_when(ascites == "absent" ~ 0,
-                             ascites == "present" ~ 1)) %>% 
+  mutate_at(., 
+            vars(spiders, hepatom, ascites), 
+            list(~ case_when(. == "absent" ~ 0,
+                             . == "present" ~ 1))) %>% 
   mutate(drug = case_when(drug == "placebo" ~ 0,
                           drug == "D-penicillamine" ~ 1)) %>% 
   mutate(mayo.risk.level = case_when(mayo.risk.level == "low risk" ~ 0,
