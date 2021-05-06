@@ -26,6 +26,36 @@ output:
 
 <!-- </style> -->
 
+<style>
+div.footnotes {
+  position: absolute;
+  bottom: 0;
+  margin-bottom: 10px;
+  width: 80%;
+  font-size: 0.4em;
+}
+</style>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+<script>
+  $(document).ready(function() {
+    $('slide:not(.backdrop):not(.title-slide)').append('<div class=\"footnotes\">');
+
+    $('footnote').each(function(index) {
+      var text  = $(this).html();
+      var fnNum = (index+1).toString().sup();
+      $(this).html(text + fnNum);
+
+      var footnote   = fnNum + ': ' + $(this).attr('content') + '<br/>';
+      var oldContent = $(this).parents('slide').children('div.footnotes').html();
+      var newContent = oldContent + footnote;
+      $(this).parents('slide').children('div.footnotes').html(newContent);
+    });
+  });
+</script>
+
+
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
@@ -33,16 +63,16 @@ knitr::opts_chunk$set(echo = FALSE)
 ## Presentation outline 
 
 - Introduction to the data set
-- Data wrangling
+- Data cleaning
 - Augmenting
-- Exploratory data analysis
-- Modelling the data
+- Results
+- Discussion
 - Conclusion
 
 ## The dataset
 
-- A clinical trial in Primary Biliary Cirrhosis (PBC) conducted by the Mayo Clinic between 1974 and 1984
-- 312 participants all suffering from PBC (varying stages of disease severity)
+- Study with 418 participants all suffering from PBC (varying stages of disease severity) conducted by the Mayo Clinic between 1974 and 1984
+- Clinical trial in Primary Biliary Cirrhosis (PBC) with 312 participants 
 - Randomized, placebo-controlled clinical trial with the drug D-penicillamine
 
 ```{r out.width = "70%", fig.align = "center"}
@@ -51,43 +81,56 @@ knitr::include_graphics("/cloud/project/results/plt_bar.png")
 
 ## Variables in the dataset
 
+- 19 variables
 - Demographic characteristics: age and gender
 - Various physiological measurements e.g. serum bilirubin, albumin, protrombin time and presence of edema
 - Variables related to the trial: drug/placebo, status (dead/alive), number of follow-up days (until death or end of study participation)
 
+---
 
 ```{r out.width = "100%", fig.align = "center"}
 knitr::include_graphics("/cloud/project/results/plt_histogram.png")
 ```
 
+## Data wrangling
+
+- Removing non-trial participants
+- Imputing NA values
+- Rounding off variables
+
+<!-- Consider inserting tables with NA -->
+
+## Augmenting
+
+- Created column with edema score
+- Calculating Mayo risk score
+
+<!-- What to do about end age? Include or remove? -->
+
 ## Mayo risk score 
 
-Formula
+Formula<footnote content="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4419097/?fbclid=IwAR3A0iZyyxnWdG0mObdwS4U_HBocqfsYkWji50e_1M_2zeCZVFLO8WH3Qyo"></footnote>
 $$
 \small \text{Mayo risk score} = 0.04 \cdot \text{age in years} + 10.87 \cdot log(\text{serum bilirubin in mg/dL}) \\ \small - 22.53 \cdot log(\text{serum albumin in gm/dL}) + 12.38 \cdot log(\text{prothrombin time in seconds}) \\ \small + 10.86 \cdot \text{edema score}
 $$
-Formula from https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4419097/?fbclid=IwAR3A0iZyyxnWdG0mObdwS4U_HBocqfsYkWji50e_1M_2zeCZVFLO8WH3Qyo
-
-<!-- Convert to risk level  -->
-
-<!-- < 8.5: low risk  -->
-
-<!-- \> 8.5 & < 10: medium risk -->
-
-<!-- \> 10: high risk -->
 
 ```{r out.width = "60%", fig.align = "center"}
 knitr::include_graphics("/cloud/project/results/plt_bar_mayo.png")
 ```
+
+## Results
+
+- Exploratory data analysis
+- Clustering
       
 ## Exploratory data analysis
 
----
 ```{r out.width = "60%", fig.align = "center"}
 knitr::include_graphics("/cloud/project/results/plt_box_age.png")
 ```
 
 ---
+
 ```{r out.width = "60%", fig.align = "center"}
 knitr::include_graphics("/cloud/project/results/plt_step_stage.png")
 ```
@@ -102,6 +145,8 @@ knitr::include_graphics("/cloud/project/results/plt_box_fu.png")
 Some notes: 
 This represents the variance within the clusters. It decreases as k increases.
 If there is a bend, as in the article. The bend indicates that additional clusters beyond have little value. 
+
+## Discussion
 
 ## Conclusion
 
