@@ -13,7 +13,18 @@ pbc_data_aug <- read_csv("data/03_pbc_data_aug.csv")
 source("R/99_project_functions.R")
 
 # Wrangle data ------------------------------------------------------------
-pbc_data_aug <- factor_columns(pbc_data_aug)
+pbc_data_aug <- pbc_data_aug %>% 
+  mutate(sex = case_when(sex == "female" ~ 0,
+                         sex == "male" ~ 1)) %>% 
+  mutate_at(., 
+            vars(spiders, hepatom, ascites), 
+            list(~ case_when(. == "absent" ~ 0,
+                             . == "present" ~ 1))) %>% 
+  mutate(drug = case_when(drug == "placebo" ~ 0,
+                          drug == "D-penicillamine" ~ 1)) %>% 
+  mutate(mayo.risk.level = case_when(mayo.risk.level == "low risk" ~ 0,
+                                     mayo.risk.level == "medium risk" ~ 1,
+                                     mayo.risk.level == "high risk" ~ 2))
 
 # PCA ---------------------------------------------------------------------
 pca_fit <- pbc_data_aug %>% 
@@ -23,14 +34,8 @@ pca_fit <- pbc_data_aug %>%
 
 pca_fit %>%
   augment(pbc_data_aug) %>% # add original dataset back in
-  ggplot(aes(.fittedPC1, .fittedPC2, color = status)) + 
-  geom_point(size = 1.5) 
-
-pca_fit %>%
-  augment(pbc_data_aug) %>% # add original dataset back in
   ggplot(aes(.fittedPC1, .fittedPC2, color = stage)) + 
   geom_point(size = 1.5) 
-
 
 pca_fit %>%
   tidy(matrix = "rotation")
