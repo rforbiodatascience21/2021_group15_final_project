@@ -69,6 +69,7 @@ knitr::opts_chunk$set(echo = FALSE)
 - Discussion
 - Conclusion
 
+
 ## The dataset
 
 - Study with 418 participants all suffering from PBC (varying stages of disease severity) conducted by the Mayo Clinic between 1974 and 1984
@@ -98,11 +99,17 @@ knitr::include_graphics("/cloud/project/results/plt_histogram.png")
 - Imputing NA values
 - Rounding off variables
 
-<!-- Consider inserting tables with NA -->
+## Table of missing values
+```{r out.width = "23%", fig.align = "center"}
+knitr::include_graphics("/cloud/project/results/table1.png")
+```
+
 
 ## Augmenting
 
 - Created column with edema score
+- Split up edema column
+- Create end age variable (is this needed?)
 - Calculating Mayo risk score
 
 <!-- What to do about end age? Include or remove? -->
@@ -129,17 +136,21 @@ knitr::include_graphics("/cloud/project/results/plt_bar_mayo.png")
 knitr::include_graphics("/cloud/project/results/plt_box_age.png")
 ```
 
----
+## ??
 
 ```{r out.width = "60%", fig.align = "center"}
 knitr::include_graphics("/cloud/project/results/plt_step_stage.png")
 ```
 
-## Clustering
+## ??
 
 ```{r out.width = "100%", fig.align = "center"}
 knitr::include_graphics("/cloud/project/results/plt_box_fu.png")
 ```
+
+## Clustering for stage
+
+## Clustering 1-4 clusters
 
 ## Clustering variance
 Some notes: 
