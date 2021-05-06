@@ -4,27 +4,51 @@ rm(list = ls())
 
 # Load libraries ----------------------------------------------------------
 library(tidyverse)
-library(kableExtra)
 library(gt)
+library(webshot)
 
 # Load data ---------------------------------------------------------------
 pbc_data <- read_csv("data/01_pbc_data.csv")
 
 
 # Look at missing values --------------------------------------------------
-na_table <- pbc_data %>%
+na_table1 <- pbc_data %>%
   summarise_all(list(~ sum(is.na(.))))
 
 # Remove non-trial subjects -----------------------------------------------
 pbc_data <- pbc_data %>% 
   filter(drug != "not randomized")
 
-# Impute missing values ---------------------------------------------------
 
+# Missing values after removal of non-trial subjects ----------------------
 # How many observations have missing values now?
 na_table2 <- pbc_data %>%
   summarise_all(list(~ sum(is.na(.))))
 
+
+# Table of missing values in data -----------------------------------------
+# Create a long table of the  missing values
+na_table1_long <- na_table1 %>%  pivot_longer(c("bili","albumin","stage","protime","sex","fu.days", "age","spiders",
+                      "hepatom", "ascites", "alk.phos", "sgot", "chol","trig","platelet",
+                      "drug","status","edema","copper"),names_to = "Variable", values_to = "NA in raw data")
+na_table2_long <- na_table2 %>%  pivot_longer(c("bili","albumin","stage","protime","sex","fu.days", "age","spiders",
+                                   "hepatom", "ascites", "alk.phos", "sgot", "chol","trig","platelet",
+                                   "drug","status","edema","copper"),names_to = "Variable", values_to = "NA in clean data")
+
+# Joing the two tibbles
+na_values <- full_join(na_table1_long,na_table2_long)
+
+# Create a table
+table1 <- na_values %>% 
+  gt() %>% 
+  tab_header(
+  title = md("Table of missing values in the data")) 
+
+# Save in results
+table1 %>% 
+  gtsave(filename = "results/table1.png")
+
+# Impute missing values ---------------------------------------------------
 # Mutate missing values by assigning the mean
 pbc_data <- pbc_data %>%
   mutate_all(list(~ ifelse(is.na(.), mean(., na.rm = TRUE),.)))
