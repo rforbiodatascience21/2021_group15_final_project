@@ -324,7 +324,6 @@ b2 <- pbc_data_aug %>%
 # Boxplot of time to end of study (stratified by stage)
 b3 <- pbc_data_aug %>%
   filter(status == 0) %>%
-  mutate(stage = factor(stage, levels = c(1, 2, 3, 4))) %>%
   ggplot(mapping = aes(x = fu.days, y = stage)) +
   geom_boxplot(alpha = 0.5,
                fill = "green4",
@@ -417,7 +416,6 @@ plots <- c(plots, "plt_box_fu3")
 
 # Barplot of number of participants for each status level (stratified by drug)
 plt_bar_drug <- pbc_data_aug %>%
-  mutate(status = factor(status, levels = c(0, 1))) %>%
   ggplot(aes(x = status, fill = drug)) +
   geom_bar(position = "dodge") +
   theme_classic() +
@@ -469,7 +467,6 @@ plots <- c(plots, "plt_step_drug")
 
 # Step plot of survival percentage over time (stratified by stage)
 plt_step_stage <- pbc_data_aug %>%
-  mutate(stage = factor(stage, levels = c(1, 2, 3, 4))) %>%
   filter(status == 1) %>%
   arrange(fu.days) %>%
   ggplot(mapping = aes(x = fu.days, color = stage)) +
