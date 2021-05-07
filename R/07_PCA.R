@@ -13,18 +13,12 @@ pbc_data_aug <- read_csv("data/03_pbc_data_aug.csv")
 source("R/99_project_functions.R")
 
 # Wrangle data ------------------------------------------------------------
+factor_columns(pbc_data_aug)
+
+# we dont want to include the variables we calculated from other variables 
+# as these columns cannot be considered independent
 pbc_data_aug <- pbc_data_aug %>% 
-  mutate(sex = case_when(sex == "female" ~ 0,
-                         sex == "male" ~ 1)) %>% 
-  mutate_at(., 
-            vars(spiders, hepatom, ascites), 
-            list(~ case_when(. == "absent" ~ 0,
-                             . == "present" ~ 1))) %>% 
-  mutate(drug = case_when(drug == "placebo" ~ 0,
-                          drug == "D-penicillamine" ~ 1)) %>% 
-  mutate(mayo.risk.level = case_when(mayo.risk.level == "low risk" ~ 0,
-                                     mayo.risk.level == "medium risk" ~ 1,
-                                     mayo.risk.level == "high risk" ~ 2))
+  select(-edema.score, -mayo.risk, -mayo.risk.level, -end.age)
 
 # PCA ---------------------------------------------------------------------
 pca_fit <- pbc_data_aug %>% 
@@ -48,15 +42,18 @@ arrow_style <- arrow(
 # plot rotation matrix
 pca_fit %>%
   tidy(matrix = "rotation") %>%
-  pivot_wider(names_from = "PC", names_prefix = "PC", values_from = "value") %>%
+  pivot_wider(names_from = "PC",
+              names_prefix = "PC",
+              values_from = "value") %>%
   ggplot(aes(PC1, PC2)) +
   geom_segment(xend = 0, yend = 0, arrow = arrow_style) +
   geom_text(
     aes(label = column),
-    hjust = 1, nudge_x = -0.02, 
+    hjust = 1,
+    nudge_x = -0.02,
     color = "#904C2F"
   ) +
-  xlim(-1.25, .5) + ylim(-.5, 1) +
+  xlim(-0.5, .5) + ylim(-.5, 0.5) +
   coord_fixed()  # fix aspect ratio to 1:1
 
 pca_fit %>%
@@ -70,13 +67,4 @@ pca_fit %>%
   ) 
 
 
-# Logistic regression -----------------------------------------------------
-
-# create logistic regression model with status as the outcome variable
-model <- pbc_data_aug %>% 
-  glm(status ~ .,
-      data = .,
-      family = binomial(link = "logit"))
-
-model_tidy <- tidy(model, conf.int = TRUE)
 
