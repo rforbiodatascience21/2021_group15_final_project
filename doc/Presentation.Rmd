@@ -87,6 +87,10 @@ knitr::include_graphics("/cloud/project/results/plt_bar.png")
 - Various physiological measurements e.g. serum bilirubin, albumin, protrombin time and presence of edema
 - Variables related to the trial: drug/placebo, status (dead/alive), number of follow-up days (until death or end of study participation)
 
+```{r out.width = "60%", fig.align = "center"}
+knitr::include_graphics("/cloud/project/results/plt_bar_sex.png")
+```
+
 ---
 
 ```{r out.width = "100%", fig.align = "center"}

@@ -30,7 +30,7 @@ stage_data <- kclust_data %>%
   select(stage, mayo.risk) %>% 
   mutate(mayo.risk = scale(mayo.risk))
 
-# Remove stage and standardise data
+# Remove stage and standardize data
 kclust_data <- kclust_data %>% 
   select(-stage) %>% 
   scale(.)

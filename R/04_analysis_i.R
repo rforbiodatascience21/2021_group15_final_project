@@ -29,7 +29,8 @@ bar1 <- pbc_data_aug %>%
     y = "Count"
   ) +
   theme(
-    plot.title.position = "plot"
+    plot.title.position = "plot",
+    legend.position = "none"
   ) 
 
 bar2 <- pbc_data_aug %>%
@@ -146,6 +147,7 @@ plt_bar_mayo <- pbc_data_aug %>%
                     values = alpha(c("blue", "red", "green"), 0.3),
                     limits = rev) +
   theme(
+    text = element_text(size= 20),
     plot.caption = element_text(hjust = 1, face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot",
@@ -159,7 +161,8 @@ plt_bar_sex <- pbc_data_aug %>%
   count(sex) %>%
   mutate(pct = n / sum(n) * 100) %>%
   ggplot(aes(x = sex, y = pct)) +
-  geom_bar(stat = "identity", alpha = 0.5, aes(fill = sex)) +
+  geom_bar(stat = "identity", aes(fill = sex)) +
+  scale_fill_manual(values = c("blue", "red")) +
   theme_classic() +
   labs(
     title = "Distribution of sex in the data",
@@ -168,12 +171,12 @@ plt_bar_sex <- pbc_data_aug %>%
     caption = "Data from https://hbiostat.org/data/"
   ) +
   theme(
+    text = element_text(size=20),
     plot.caption = element_text(hjust = 1, face = "italic"),
     plot.title.position = "plot",
-    plot.title = element_text(size = 20),
     plot.caption.position = "plot",
     legend.position = "none"
-  )
+  ) 
 
 plots <- c(plots, "plt_bar_sex")
 
@@ -454,7 +457,7 @@ plt_step_drug <- pbc_data_aug %>%
   filter(status == 1) %>%
   arrange(fu.days) %>%
   ggplot(mapping = aes(x = fu.days, color = drug)) +
-  geom_step(aes(x = fu.days, y = (312 - cumulative_count) / 312))  +
+  geom_step(aes(x = fu.days, y = (125 - cumulative_count) / 125))  +
   theme_classic() +
   labs(
     title = "Number of follow-up days (stratified by drug)",
@@ -474,9 +477,10 @@ plots <- c(plots, "plt_step_drug")
 # Step plot of survival percentage over time (stratified by stage)
 plt_step_stage <- pbc_data_aug %>%
   filter(status == 1) %>%
+  group_by(stage) %>%
   arrange(fu.days) %>%
   ggplot(mapping = aes(x = fu.days, color = stage)) +
-  geom_step(aes(x = fu.days, y = (312 - cumulative_count) / 312)) +
+  geom_step(aes(x = fu.days, y = (125 - cumulative_count) / 125)) +
   theme_classic() +
   labs(
     title = "Number of follow-up days in relation to the 4 stages",
