@@ -45,7 +45,8 @@ bar2 <- pbc_data_aug %>%
   theme(
     plot.caption = element_text(hjust = 1, face = "italic"),
     plot.title.position = "plot",
-    plot.caption.position = "plot"
+    plot.caption.position = "plot",
+    legend.position = "none"
   ) 
   
 plt_bar <- bar1 | bar2 
@@ -142,7 +143,7 @@ plt_bar_mayo <- pbc_data_aug %>%
   scale_fill_manual(labels = c("High risk: Mayo risk > 10", 
                                "Medium risk: 8.5 < Mayo risk > 10",
                                "Low risk: Mayo risk < 8.5"),
-                    values = alpha(c("blue", "red", "green"), .5),
+                    values = alpha(c("blue", "red", "green"), 0.3),
                     limits = rev) +
   theme(
     plot.caption = element_text(hjust = 1, face = "italic"),
@@ -184,7 +185,7 @@ point1 <- pbc_data_aug %>%
     color = mayo.risk.level,
     shape = sex
   )) +
-  geom_point() +
+  geom_point(size = 3) +
   theme_classic() +
   labs(
     title = "Correlation between Serum Bilirubin \n and number of follow-up days",
@@ -195,8 +196,8 @@ point1 <- pbc_data_aug %>%
     plot.title.position = "plot",
     legend.position = "none"
   ) +
-  scale_shape_manual(values = c(3, 19), name = "Sex") +
-  scale_color_discrete(name = "Mayo risk score level", limits = rev)
+  scale_shape_manual(values = c(15, 17), name = "Sex") +
+  scale_color_manual(name = "Mayo risk score level", values = alpha(c("blue", "red", "green"), 0.5), limits = rev)
 
 # Correlation between bilirubin and time to death (stratified by sex and Mayo risk score)
 point2 <- pbc_data_aug %>%
@@ -207,7 +208,7 @@ point2 <- pbc_data_aug %>%
     color = mayo.risk.level,
     shape = sex
   )) +
-  geom_point() +
+  geom_point(size = 3) +
   theme_classic() +
   labs(
     title = "Correlation between Serum Bilirubin \n and number of days to death",
@@ -220,8 +221,8 @@ point2 <- pbc_data_aug %>%
     plot.title.position = "plot",
     plot.caption.position = "plot"
   ) +
-  scale_shape_manual(values = c(3, 19), name = "Sex") +
-  scale_color_discrete(name = "Mayo risk score level", limits = rev)
+  scale_color_manual(name = "Mayo risk score level", values = alpha(c("blue", "red", "green"), 0.5), limit = rev) +
+  scale_shape_manual(values = c(15, 17), name = "Sex")
 
 plt_bili_scatter <- (point1 | point2) + plot_annotation(title = "Scatterplot of number of follow-up days",
                                 theme = theme(plot.title = element_text(hjust = 0.5, size = 20)))
@@ -237,7 +238,7 @@ h1 <- pbc_data_aug %>%
     binwidth = 365.25,
     fill = "royalblue4",
     color = "royalblue4",
-    alpha = 0.5
+    alpha = 0.3
   ) +
   theme_classic() +
   labs(title = "All participants",
@@ -255,7 +256,7 @@ h2 <- pbc_data_aug %>%
   ggplot(mapping = aes(x = fu.days)) +
   geom_histogram(binwidth = 365.25,
                  aes(fill = "red", color = "red"),
-                 alpha = 0.5) +
+                 alpha = 0.3) +
   theme_classic() +
   labs(title = "Participants who die",
        x = "Follow-up days", y = "Count") +
@@ -274,7 +275,7 @@ h3 <- pbc_data_aug %>%
     binwidth = 365.25,
     fill = "green4",
     color = "green4",
-    alpha = 0.5
+    alpha = 0.3
   ) +
   theme_classic() +
   labs(
@@ -300,7 +301,7 @@ plots <- c(plots, "plt_hist_fu")
 # Boxplot of time to death/liver transplant/end of study
 b1 <- pbc_data_aug %>%
   ggplot(mapping = aes(x = fu.days, y = status)) +
-  geom_boxplot(alpha = 0.5,
+  geom_boxplot(alpha = 0.3,
                fill = "royalblue4",
                color = "royalblue4") +
   theme_classic() +
@@ -315,11 +316,11 @@ b1 <- pbc_data_aug %>%
 b2 <- pbc_data_aug %>%
   filter(status == 1) %>%
   ggplot(mapping = aes(x = fu.days, y = stage)) +
-  geom_boxplot(alpha = 0.5,
+  geom_boxplot(alpha = 0.3,
                fill = "red",
                color = "red") +
   theme_classic() +
-  labs(title = "Participants who die (stratified by stage)",
+  labs(title = "Participants who have died (stratified by stage)",
        x = "Follow-up days", y = "Stage") +
   theme(
     plot.title.position = "plot",
@@ -330,7 +331,7 @@ b2 <- pbc_data_aug %>%
 b3 <- pbc_data_aug %>%
   filter(status == 0) %>%
   ggplot(mapping = aes(x = fu.days, y = stage)) +
-  geom_boxplot(alpha = 0.5,
+  geom_boxplot(alpha = 0.2,
                fill = "green4",
                color = "green4") +
   theme_classic() +
