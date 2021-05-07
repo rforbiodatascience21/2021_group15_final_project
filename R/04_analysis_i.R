@@ -102,8 +102,8 @@ box1 <- pbc_data_aug %>%
 # Box plot age vs. Mayo risk score (stratified by sex)
 box2 <- pbc_data_aug %>%
   group_by(mayo.risk.level) %>%
-  ggplot(mapping = aes(x = age, y = mayo.risk.level, fill = sex)) +
-  geom_boxplot(alpha = 0.5) +
+  ggplot(mapping = aes(x = age, y = mayo.risk.level)) +
+  geom_boxplot(alpha = 0.5, aes(fill = sex)) +
   theme_classic() +
   labs(
     title = "Distribution of age in the three Mayo risk score levels for both sex",
@@ -144,7 +144,7 @@ plt_bar_mayo <- pbc_data_aug %>%
   scale_fill_manual(labels = c("High risk: Mayo risk > 10", 
                                "Medium risk: 8.5 < Mayo risk > 10",
                                "Low risk: Mayo risk < 8.5"),
-                    values = alpha(c("blue", "red", "green"), 0.3),
+                    values = alpha(c("red", "blue", "green"), 0.3),
                     limits = rev) +
   theme(
     text = element_text(size= 20),
@@ -161,7 +161,7 @@ plt_bar_sex <- pbc_data_aug %>%
   count(sex) %>%
   mutate(pct = n / sum(n) * 100) %>%
   ggplot(aes(x = sex, y = pct)) +
-  geom_bar(stat = "identity", aes(fill = sex)) +
+  geom_bar(stat = "identity", aes(fill = sex), alpha = 0.3) +
   scale_fill_manual(values = c("blue", "red")) +
   theme_classic() +
   labs(
@@ -224,7 +224,7 @@ point2 <- pbc_data_aug %>%
     plot.title.position = "plot",
     plot.caption.position = "plot"
   ) +
-  scale_color_manual(name = "Mayo risk score level", values = alpha(c("blue", "red", "green"), 0.5), limit = rev) +
+  scale_color_manual(name = "Mayo risk score level", values = alpha(c("red", "blue", "green"), 0.5), limit = rev) +
   scale_shape_manual(values = c(15, 17), name = "Sex")
 
 plt_bili_scatter <- (point1 | point2) + plot_annotation(title = "Scatterplot of number of follow-up days",
