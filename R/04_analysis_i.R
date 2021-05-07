@@ -21,7 +21,7 @@ pbc_data_aug <- factor_columns(pbc_data_aug)
 # Bar plots of data set overview
 bar1 <- pbc_data_aug %>%
   ggplot(mapping = aes(x = stage, fill = stage)) +
-  geom_bar() +
+  geom_bar(alpha = 0.5) +
   theme_classic() +
   labs(
     title = "Barplot of participants in different stages",
@@ -34,7 +34,7 @@ bar1 <- pbc_data_aug %>%
 
 bar2 <- pbc_data_aug %>%
   ggplot(mapping = aes(x = drug, fill = drug)) +
-  geom_bar() +
+  geom_bar(alpha = 0.5) +
   theme_classic() +
   labs(
     title = "Barplot of participants in each treatment category",
@@ -59,7 +59,7 @@ pbc_numberic <- pbc_data_aug %>%
 
 plt_histogram <- ggplot(gather(pbc_numberic, key, value, -c(drug)),
        mapping = aes(value, fill = factor(drug))) +
-  geom_histogram(bins = 10) +
+  geom_histogram(bins = 10, alpha = 0.5) +
   #geom_histogram(mapping = aes(y = (..density..)), bins = 8) +
   facet_wrap(~ key, scales = 'free_x') +
   theme_classic() +
@@ -130,7 +130,7 @@ plt_bar_mayo <- pbc_data_aug %>%
   count(mayo.risk.level) %>%
   mutate(pct = n / sum(n) * 100) %>%
   ggplot(aes(x = mayo.risk.level, y = pct)) +
-  geom_bar(stat = "identity", alpha = 0.5, aes(fill = mayo.risk.level)) +
+  geom_bar(stat = "identity", aes(fill = mayo.risk.level)) +
   theme_classic() +
   labs(
     title = "Distribution of participants in the three Mayo risk score levels",
@@ -142,7 +142,7 @@ plt_bar_mayo <- pbc_data_aug %>%
   scale_fill_manual(labels = c("High risk: Mayo risk > 10", 
                                "Medium risk: 8.5 < Mayo risk > 10",
                                "Low risk: Mayo risk < 8.5"),
-                    values = c("blue", "red", "green"),
+                    values = alpha(c("blue", "red", "green"), .5),
                     limits = rev) +
   theme(
     plot.caption = element_text(hjust = 1, face = "italic"),
@@ -422,7 +422,7 @@ plots <- c(plots, "plt_box_fu3")
 # Barplot of number of participants for each status level (stratified by drug)
 plt_bar_drug <- pbc_data_aug %>%
   ggplot(aes(x = status, fill = drug)) +
-  geom_bar(position = "dodge") +
+  geom_bar(position = "dodge", alpha = 0.5) +
   theme_classic() +
   labs(
     title = "Number of participants in status 0 or 1 in relation to the two drugs",
