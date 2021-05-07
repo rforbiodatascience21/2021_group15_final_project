@@ -9,28 +9,43 @@ library(broom)
 # Load data ---------------------------------------------------------------
 pbc_data_aug <- read_csv("data/03_pbc_data_aug.csv")
 
-# Source functions --------------------------------------------------------
-source("R/99_project_functions.R")
-
 # Wrangle data ------------------------------------------------------------
-#pbc_data_aug <- factor_columns(pbc_data_aug)
 
-# Linear regression model -------------------------------------------------
+# we dont want to include the variables we calculated from other variables 
+# as these columns cannot be considered independent
+pbc_data_aug <- pbc_data_aug %>% 
+  select(-edema.score, -mayo.risk, -mayo.risk.level, -end.age)
 
-# first we scale the data
+# factor status to use as outcome variable
+pbc_data_aug <- pbc_data_aug %>% 
+  mutate(status = factor(status, levels = c(0, 1)))
+
+# scale the data
 pbc_data_scaled <- pbc_data_aug %>% 
   mutate_if(is.numeric, scale) # scale subtracts the mean and divide by the sd 
 
-# remove variables that are not needed
-pbc_data_scaled <- pbc_data_scaled %>% 
-  select(-age, -albumin, - bili, -protime, -end.age, -edema.score)
+# Logistic regression model -------------------------------------------------
 
-# make linear model
-lm <- lm(status ~ ., data = pbc_data_scaled)
+# we wish to investigate whether the treatment has an effect on survival
 
-lm_tidy <- tidy(lm, conf.int = TRUE)
+# make linear model to predict status
+pbc_data_glm <- glm(status ~., data = pbc_data_scaled, family = binomial("logit"))
+
+# tidy to get coefficient summaries
+glm_tidy <- tidy(pbc_data_glm, conf.int = TRUE)
+
+# plot estimates of each variable incl the confidence interval
+glm_tidy %>% 
+  filter(term != "(Intercept)") %>% 
+  mutate(term = fct_reorder(term, desc(estimate))) %>% 
+  ggplot(., aes(x=estimate, y=term)) + 
+  geom_point() +
+  geom_errorbar(aes(xmin= conf.low, xmax=conf.high)) +
+  geom_vline(xintercept = 0, color = "grey40", linetype = "dashed") +
+  theme_classic() +
+  theme(legend.position = "bottom", axis.text.y = element_text(size = 6), axis.title.y = element_blank())
 
 # select p-values < 0.05
-lm_tidy %>% 
+glm_tidy %>% 
   filter(p.value < 0.05)
 
