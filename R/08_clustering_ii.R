@@ -18,19 +18,7 @@ source("R/99_project_functions.R")
 
 # We will use the  kmeans() function, which only takes numeric columns
 # Change non numeric columns to numeric
-kclust_data <- pbc_data_aug %>% 
-  mutate(sex = case_when(sex == "female" ~ 0,
-                         sex == "male" ~ 1)) %>% 
-  mutate_at(., 
-            vars(spiders, hepatom, ascites), 
-            list(~ case_when(. == "absent" ~ 0,
-                             . == "present" ~ 1))) %>% 
-  mutate(drug = case_when(drug == "placebo" ~ 0,
-                          drug == "D-penicillamine" ~ 1)) %>% 
-  mutate(mayo.risk.level = case_when(mayo.risk.level == "low risk" ~ 0,
-                                     mayo.risk.level == "medium risk" ~ 1,
-                                     mayo.risk.level == "high risk" ~ 2))
-
+kclust_data <- factor_columns(pbc_data_aug)
 
 # Check that all values in mayo risk are unique
 test <- kclust_data %>% 
