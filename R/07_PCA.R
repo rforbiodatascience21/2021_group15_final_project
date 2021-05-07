@@ -13,17 +13,22 @@ pbc_data_aug <- read_csv("data/03_pbc_data_aug.csv")
 source("R/99_project_functions.R")
 
 # Wrangle data ------------------------------------------------------------
-factor_columns(pbc_data_aug)
 
 # we dont want to include the variables we calculated from other variables 
 # as these columns cannot be considered independent
 pbc_data_aug <- pbc_data_aug %>% 
   select(-edema.score, -mayo.risk, -mayo.risk.level, -end.age)
 
+# scale the data
+pbc_data_scaled <- pbc_data_aug %>% 
+  mutate_if(is.numeric, scale) # scale subtracts the mean and divide by the sd
+
+# we can use pivot_wider to dummy code variables
+# https://community.rstudio.com/t/factor-to-one-hot-encoding-aka-dummy-variables-using-logicals/69236/2
+
+
 # PCA ---------------------------------------------------------------------
-pca_fit <- pbc_data_aug %>% 
-  select(where(is.numeric)) %>%  
-  scale() %>% 
+pca_fit <- pbc_data_scaled %>% 
   prcomp()
 
 pca_fit %>%
