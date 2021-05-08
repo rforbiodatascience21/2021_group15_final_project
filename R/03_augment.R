@@ -13,28 +13,28 @@ pbc_data_clean <- read_csv("data/02_pbc_data_clean.csv")
 
 # Calculate Mayo Risk score -----------------------------------------------
 
-# to use the "join" functions we create a separate data frame containing the risk score
+# To use the "join" functions we create a separate data frame containing the risk score
 # the two data frames must be joined by a shared column 
 # so we create a column with row number in the data set
 
-# create column with row number
+# Create column with row number
 pbc_data_clean <- pbc_data_clean %>% 
   mutate(row.number = rownames(.))
 
-# create edema score column
+# Create edema score column
 pbc_data_clean <- pbc_data_clean %>% 
   mutate(edema.score = case_when(edema == "no edema" ~ 0,
                                  edema == "edema, no diuretic therapy" ~ 0.5,
                                  edema == "edema despite diuretic therapy" ~ 1)) %>% 
   relocate(edema.score, .after = edema)
 
-# select the edema column in a new tibble
+# Select the edema column in a new tibble
 edema_col <- pbc_data_clean %>% 
   select(edema) %>% 
   slice(1:5) %>% 
   mutate(row.number = rownames(.))
 
-# calculate risk score
+# Calculate risk score
 risk_score <- pbc_data_clean %>%
   mutate(mayo.risk = 
            0.04 * age + 
@@ -44,7 +44,7 @@ risk_score <- pbc_data_clean %>%
            10.86 * edema.score) %>% 
   select(row.number, mayo.risk)
 
-# convert to risk level
+# Convert to risk level
 risk_score <- risk_score %>%
   mutate(
     mayo.risk.level = case_when(
@@ -55,7 +55,7 @@ risk_score <- risk_score %>%
     )
   )
 
-# join risk score with pbc data frame and remove row number column
+# Join risk score with pbc data frame and remove row number column
 pbc_data_clean <- left_join(pbc_data_clean, risk_score, by = "row.number") %>%
   select(-row.number)
 
@@ -95,10 +95,10 @@ table_edema <- edema_both %>%
     label = "Augmented data",
     columns = matches("edema_new|diuretic|edema.score"))
 
-# Save in results
-table_edema %>% 
-  gtsave(filename = "results/table_edema.png")
-
 
 # Write data --------------------------------------------------------------
 write_csv(x = pbc_data_clean, file = "data/03_pbc_data_aug.csv")
+
+# Save in results
+table_edema %>% 
+  gtsave(filename = "results/table_edema.png")
