@@ -19,9 +19,67 @@ source("R/99_project_functions.R")
 # Wrangle data ------------------------------------------------------------
 pbc_data_aug <- factor_columns(pbc_data_aug)
 
+
 # Exploratory data analysis -----------------------------------------------
 
-# Bar plots of data set overview
+# Create empty vector for storing plot names
+plots <- c()
+
+# Create list for changing variable names in plots
+
+variable_labs <- c(
+  "Serum bilirubin (mg/dL)",
+  "Albumin (mg/dL)",
+  "Disease stage",
+  "Prothrombin time (seconds)",
+  "Sex",
+  "Follow-up days",
+  "Age",
+  "Spiders",
+  "Hepatom",
+  "Ascites",
+  "Alkaline phosphatase (U/L)",
+  "SGOT (U/mL)",
+  "Serum cholesterol (mg/dL)",
+  "Triglicerides (mg/dL)",
+  "Plateles (per cubic ml/1000)",
+  "Drug",
+  "Status",
+  "Edema",
+  "Diuretic",
+  "Edema score",
+  "Urine copper (ug/day)",
+  "Mayo risk score",
+  "Mayo risk level"
+)
+names(variable_labs) <- c(
+  "bili",
+  "albumin",
+  "stage",
+  "protime",
+  "sex",
+  "fu.days",
+  "age",
+  "spiders",
+  "hepatom",
+  "ascites",
+  "alk.phos",
+  "sgot",
+  "chol",
+  "trig",
+  "platelet",
+  "drug",
+  "status",
+  "edema",
+  "diuretic",
+  "edema.score",
+  "copper",
+  "mayo.risk",
+  "mayo.risk.level"
+)
+
+
+# Bar plots of data set overview ------------------------------------------
 bar1 <- pbc_data_aug %>%
   ggplot(mapping = aes(x = stage, fill = stage)) +
   geom_bar(alpha = 0.5) +
@@ -57,33 +115,40 @@ bar2 <- pbc_data_aug %>%
   
 plt_bar <- bar1 | bar2 
 
-plots <- c("plt_bar")
+# Append plot name to plots list
+plots <- c(plots, "plt_bar")
 
-# Histograms of numeric variables
+
+# Histograms of numeric variables -----------------------------------------
 pbc_numeric <- pbc_data_aug %>%
   select(where(is.numeric), drug) %>%
   select(-edema,-diuretic,-edema.score,-mayo.risk) %>%
   pivot_longer(-drug, names_to = "key", values_to = "value")
 
-plt_histogram <- pbc_numeric %>% 
+plt_histogram <- pbc_numeric %>%
   ggplot(mapping = aes(value, color = factor(drug))) +
   geom_freqpoly(alpha = 0.5, bins = 30, size = 2) +
-  facet_wrap(~ key, scales = 'free') +
+  facet_wrap( ~ key,
+              scales = 'free',
+              labeller = labeller(key = variable_labs)) +
   theme_classic() +
-  labs(title = "Histograms of numeric attributes in the data set",
-       x = "",
-       y = "Count",
-       caption = "Data from https://hbiostat.org/data/") +
+  labs(
+    title = "Histograms of numeric attributes in the data set",
+    x = "",
+    y = "Count",
+    caption = "Data from https://hbiostat.org/data/"
+  ) +
   theme(
-    text = element_text(size = 20),
+    text = element_text(size = 14),
     plot.caption = element_text(hjust = 1, face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot",
     axis.text.x = element_text(
       angle = 45,
       vjust = 1,
-      hjust = 1)
-  )  + 
+      hjust = 1
+    )
+  )  +
   scale_color_discrete(name = "Drug")
 
 plots <- c(plots, "plt_histogram")
