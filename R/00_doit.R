@@ -4,9 +4,7 @@ source(file = "R/02_clean.R")
 source(file = "R/03_augment.R")
 source(file = "R/04_analysis_i.R")
 source(file = "R/05_analysis_ii.R")
-source(file = "R/06_clusteing.R")
-source(file = "R/07_PCA")
-
+source(file = "R/06_clustering.R")
 
 # Knit the Presentation slides --------------------------------------------
 rmarkdown::render('doc/Presentation.Rmd',output_file='Presentation.html')
