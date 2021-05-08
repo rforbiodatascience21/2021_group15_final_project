@@ -1,12 +1,14 @@
 # Clear workspace ---------------------------------------------------------
 rm(list = ls())
 
+
 # Load libraries ----------------------------------------------------------
 library(tidyverse)
-library(gt)
+
 
 # Load data ---------------------------------------------------------------
 pbc_data_clean <- read_csv("data/02_pbc_data_clean.csv")
+
 
 # Calculate Mayo Risk score -----------------------------------------------
 
@@ -23,12 +25,6 @@ pbc_data_clean <- pbc_data_clean %>%
                                  edema == "edema, no diuretic therapy" ~ 0.5,
                                  edema == "edema despite diuretic therapy" ~ 1)) %>% 
   relocate(edema.score, .after = edema)
-
-# select the edema column in a new tibble
-edema_col <- pbc_data_clean %>% 
-  select(edema) %>% 
-  slice(1:5) %>% 
-  mutate(row.number = rownames(.))
 
 # calculate risk score
 risk_score <- pbc_data_clean %>%
@@ -63,38 +59,10 @@ pbc_data_clean <- pbc_data_clean %>%
   relocate(diuretic, .after = edema)
 
 
-# Edema table -------------------------------------------------------------
-edema_new <- pbc_data_clean %>% 
-  select(edema,diuretic,edema.score) %>% 
-  mutate(edema_new = edema) %>% 
-  select(-edema) %>% 
-  relocate(edema_new, .before = diuretic) %>% 
-  slice(1:5) %>% 
-  mutate(row.number = rownames(.))
-
-edema_both <- edema_col %>% 
-  mutate(edema_raw = edema) %>% 
-  select(-edema) %>% 
-  left_join(.,edema_new,by="row.number") %>% 
-  select(-row.number)
-  
-table_edema <- edema_both %>% 
-  gt() %>% 
-  tab_style(
-    style = list(
-      cell_text(weight = "bold")
-    ),
-    locations = cells_column_labels(columns = everything())) %>% 
-  tab_header(
-    title = md("Edema columns in raw versus augmented data")) %>% 
-  tab_spanner(
-    label = "Augmented data",
-    columns = matches("edema_new|diuretic|edema.score"))
-
-# Save in results
-table_edema %>% 
-  gtsave(filename = "results/table_edema.png")
-
+# Create end age variable -------------------------------------------------
+pbc_data_clean <- pbc_data_clean %>% 
+  mutate(end.age = floor(age + (fu.days/365.25))) %>% 
+  relocate(end.age, .after = age)
 
 
 # Write data --------------------------------------------------------------

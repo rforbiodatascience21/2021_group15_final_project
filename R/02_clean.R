@@ -4,8 +4,9 @@ rm(list = ls())
 
 # Load libraries ----------------------------------------------------------
 library(tidyverse)
-library(gt)
+library(gt) # generate display tables
 library(webshot)
+
 
 # Load data ---------------------------------------------------------------
 pbc_data <- read_csv("data/01_pbc_data.csv")
@@ -55,7 +56,7 @@ table1 %>%
 # Impute missing values ---------------------------------------------------
 # Mutate missing values by assigning the mean
 pbc_data <- pbc_data %>%
-  mutate_all(list(~ ifelse(is.na(.), mean(., na.rm = TRUE),.)))
+  mutate_all(list(~ ifelse(is.na(.), mean(., na.rm = TRUE), .)))
 
 # Round off variables -----------------------------------------------------
 
