@@ -1,12 +1,15 @@
 # Clear workspace ---------------------------------------------------------
 rm(list = ls())
 
+
 # Load libraries ----------------------------------------------------------
 library(tidyverse)
 library(gt)
 
+
 # Load data ---------------------------------------------------------------
 pbc_data_clean <- read_csv("data/02_pbc_data_clean.csv")
+
 
 # Calculate Mayo Risk score -----------------------------------------------
 
@@ -95,6 +98,7 @@ table_edema <- edema_both %>%
 # Save in results
 table_edema %>% 
   gtsave(filename = "results/table_edema.png")
+
 
 # Write data --------------------------------------------------------------
 write_csv(x = pbc_data_clean, file = "data/03_pbc_data_aug.csv")
