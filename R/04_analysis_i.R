@@ -20,7 +20,7 @@ source("R/99_project_functions.R")
 pbc_data_aug <- factor_columns(pbc_data_aug)
 
 
-# Exploratory data analysis -----------------------------------------------
+# Pre plotting prep -------------------------------------------------------
 
 # Create empty vector for storing plot names
 plots <- c()
@@ -159,12 +159,12 @@ plots <- c(plots, "plt_histogram")
 plt_bar_mayo <- pbc_data_aug %>%
   count(mayo.risk.level) %>%
   mutate(pct = n / sum(n) * 100) %>%
-  ggplot(aes(x = mayo.risk.level, y = pct)) +
-  geom_bar(stat = "identity", aes(fill = mayo.risk.level)) +
+  ggplot(mapping = aes(x = mayo.risk.level, y = pct, fill = mayo.risk.level)) +
+  geom_bar(stat = "identity") +
   theme_classic() +
   labs(
     title = "Distribution of participants in the three Mayo risk score levels",
-    x = "Mayo risk score level",
+    x = "",
     y = "Percentage",
     caption = "Data from https://hbiostat.org/data/",
     fill = "Mayo risk level"
@@ -175,6 +175,7 @@ plt_bar_mayo <- pbc_data_aug %>%
       "Medium risk:\n8.5 < Mayo risk score > 10",
       "Low risk:\nMayo risk score < 8.5"
     ),
+    name = "Mayo risk score level",
     values = alpha(c("red", "blue", "green"), 0.3),
     limits = rev
   ) +
@@ -198,8 +199,8 @@ plots <- c(plots, "plt_bar_mayo")
 plt_bar_sex <- pbc_data_aug %>%
   count(sex) %>%
   mutate(pct = n / sum(n) * 100) %>%
-  ggplot(aes(x = sex, y = pct)) +
-  geom_bar(stat = "identity", aes(fill = sex), alpha = 0.5) +
+  ggplot(mapping = aes(x = sex, y = pct, fill = sex)) +
+  geom_bar(stat = "identity", alpha = 0.5) +
   scale_fill_discrete(limits = rev) +
   theme_classic() +
   labs(
@@ -224,6 +225,8 @@ plots <- c(plots, "plt_bar_sex")
 
 
 # Scatterplot of bilirubin and follow-up days -----------------------------
+
+# Scatterplot with all participants
 point1 <- pbc_data_aug %>%
   ggplot(mapping = aes(
     x = fu.days,
@@ -233,21 +236,20 @@ point1 <- pbc_data_aug %>%
   )) +
   geom_point(size = 3) +
   theme_classic() +
-  labs(
-    title = "Correlation between Serum Bilirubin \n and number of follow-up days",
-    x = "Follow-up days",
-    y = "Serum Bilirubin (mg/dl)"
-  ) +
+  labs(title = "Correlation between Serum Bilirubin \n and number of follow-up days",
+       x = "Follow-up days",
+       y = "Serum Bilirubin (mg/dL)") +
   theme(
     text = element_text(size = 15),
     plot.title.position = "plot",
     legend.position = "none"
   ) +
   scale_shape_manual(values = c(15, 17), name = "Sex") +
-  scale_color_manual(name = "Mayo risk score level", 
-                     values = alpha(c("red", "blue", "green"), 0.5), limits = rev)
+  scale_color_manual(name = "Mayo risk score level",
+                     values = alpha(c("red", "blue", "green"), 0.3),
+                     limits = rev)
 
-# Correlation between bilirubin and time to death (stratified by sex and Mayo risk score)
+# Scatter plot with participants who die
 point2 <- pbc_data_aug %>%
   filter(status == 1) %>%
   ggplot(mapping = aes(
@@ -270,106 +272,53 @@ point2 <- pbc_data_aug %>%
     plot.title.position = "plot",
     plot.caption.position = "plot"
   ) +
-  scale_color_manual(name = "Mayo risk score level", values = alpha(c("red", "blue", "green"), 0.5), limit = rev) +
-  scale_shape_manual(values = c(15, 17), name = "Sex")
+  scale_color_manual(
+    labels = c(
+      "high risk" = "High risk",
+      "medium risk" = "Medium risk",
+      "low risk" = "Low risk"
+    ),
+    name = "Mayo risk score level",
+    values = alpha(c("red", "blue", "green"), 0.3),
+    limit = rev
+  ) +
+  scale_shape_manual(
+    labels = c("male" = "Male",
+               "female" = "Female"),
+    values = c(15, 17),
+    name = "Sex"
+  )
 
 plt_bili_scatter <- (point1 | point2)
 
 plots <- c(plots, "plt_bili_scatter")
 
-# Histograms of the variable follow up days
 
-# Histogram of time to death/liver transplant/end of study
-h1 <- pbc_data_aug %>%
-  ggplot(mapping = aes(x = fu.days)) +
-  geom_histogram(
-    binwidth = 365.25,
-    fill = "royalblue4",
-    color = "royalblue4",
-    alpha = 0.3
-  ) +
-  theme_classic() +
-  labs(title = "All participants",
-       x = "Follow-up days", y = "Count") +
-  theme(
-    plot.caption = element_text(hjust = 1, face = "italic"),
-    plot.title.position = "plot",
-    plot.caption.position = "plot",
-    legend.position = "none"
-  )
+# Boxplots with follow-up days --------------------------------------------
 
-# Histogram of time to death
-h2 <- pbc_data_aug %>%
-  filter(status == 1) %>%
-  ggplot(mapping = aes(x = fu.days)) +
-  geom_histogram(binwidth = 365.25,
-                 aes(fill = "red", color = "red"),
-                 alpha = 0.3) +
-  theme_classic() +
-  labs(title = "Participants who die",
-       x = "Follow-up days", y = "Count") +
-  theme(
-    plot.caption = element_text(hjust = 1, face = "italic"),
-    plot.title.position = "plot",
-    plot.caption.position = "plot",
-    legend.position = "none"
-  )
-
-# Histogram of time to liver transplant or end of study
-h3 <- pbc_data_aug %>%
-  filter(status == 0) %>%
-  ggplot(mapping = aes(x = fu.days)) +
-  geom_histogram(
-    binwidth = 365.25,
-    fill = "green4",
-    color = "green4",
-    alpha = 0.3
-  ) +
-  theme_classic() +
-  labs(
-    title = "Participants who live",
-    x = "Follow-up days",
-    y = "Count",
-    caption = "Data from https://hbiostat.org/data/"
-  ) +
-  theme(
-    plot.caption = element_text(hjust = 1, face = "italic"),
-    plot.title.position = "plot",
-    plot.caption.position = "plot",
-    legend.position = "none"
-  )
-
-plt_hist_fu <- h1 / (h2 + h3) + plot_annotation(title = "Histograms of number of follow-up days",
-                                 theme = theme(plot.title = element_text(hjust = 0.5, size = 20)))
-
-plots <- c(plots, "plt_hist_fu")
-
-# Boxplot of the variable follow up days
-
-# Boxplot of time to death (stratified by stage)
+# Boxplot of number of follow-up days
 plt_box_fu <- pbc_data_aug %>%
   ggplot(mapping = aes(x = fu.days, y = stage, fill = status)) +
   geom_boxplot(alpha = 0.5) +
   theme_classic() +
-  labs(title = "Participants who have died",
-       x = "Days to death", y = "Stage") +
-  theme(
-    text = element_text(size = 20),
-    plot.title.position = "plot"
-  ) +
-  scale_fill_discrete(labels = c("Alive", 
-                                 "Dead"))
+  labs(title = "Boxplot of follow-up days",
+       x = "Follow-up days", y = "Stage") +
+  theme(text = element_text(size = 20),
+        plot.title.position = "plot") +
+  scale_fill_discrete(labels = c("0" = "Alive",
+                                 "1" = "Dead"),
+                      name = "Status")
 
 plots <- c(plots, "plt_box_fu")
 
-# Boxplot of time to death (stratified by stage and drug)
+# Boxplot of time to death 
 box_fu1 <- pbc_data_aug %>%
   filter(status == 1) %>%
   ggplot(mapping = aes(x = fu.days, y = stage, fill = drug)) +
   geom_boxplot(alpha = 0.5) +
   theme_classic() +
   labs(
-    title = "Number of days to death (stratified by stage and drug)",
+    title = "Boxplot of days to death",
     x = "Days to death",
     y = "Stage"
   ) +
@@ -379,7 +328,7 @@ box_fu1 <- pbc_data_aug %>%
   scale_fill_discrete(name = "Drug") +
   scale_x_continuous(limits = c(0,5000))
 
-# Boxplot of time to death/liver transplant/end of study (stratified by status and drug)
+# Boxplot of follow-up days
 box_fu2 <- pbc_data_aug %>%
   ggplot(mapping = aes(x = fu.days, y = status, fill = drug)) +
   geom_boxplot(alpha = 0.5) +
@@ -395,17 +344,20 @@ box_fu2 <- pbc_data_aug %>%
     plot.title.position = "plot",
     plot.caption.position = "plot"
   ) +
-  scale_fill_discrete(name = "Drug") +
-  scale_x_continuous(limits = c(0,5000))
+  scale_fill_discrete(name = "Drug",
+                      labels = c("placebo" = "Placebo")) +
+  scale_x_continuous(limits = c(0, 5000)) +
+  scale_y_discrete(labels = c("0" = "Alive",
+                              "1" = "Dead"))
 
-plt_box_fu2 <- box_fu1 / box_fu2 + 
+plt_box_fu2 <- box_fu1 / box_fu2 +
   plot_annotation(title = "Boxplots of number of follow-up days",
-                                    theme = theme(plot.title = element_text(hjust = 0.5, size = 20))) +
+                  theme = theme(plot.title = element_text(hjust = 0.5, size = 20))) +
   plot_layout(guides = "collect")
 
 plots <- c(plots, "plt_box_fu2")
 
-# Boxplot of time to death (stratified by status 1 and drug)
+# Boxplot of follow-up days (dead participants only)
 plt_box_fu3 <- pbc_data_aug %>%
   filter(status == 1) %>%
   ggplot(mapping = aes(x = fu.days, y = status, fill = drug)) +
@@ -424,12 +376,14 @@ plt_box_fu3 <- pbc_data_aug %>%
     plot.title.position = "plot",
     plot.caption.position = "plot"
   ) +
-  scale_fill_discrete(name = "Drug") +
-  scale_x_continuous(limits = c(0,5000))
+  scale_fill_discrete(name = "Drug",
+                      labels = c("placebo" = "Placebo")) +
+  scale_x_continuous(limits = c(0, 5000))
 
 plots <- c(plots, "plt_box_fu3")
 
-# Barplot of number of participants for each status level (stratified by drug)
+
+# Barplot of drug distribution --------------------------------------------
 plt_bar_drug <- pbc_data_aug %>%
   ggplot(aes(x = status, fill = drug)) +
   geom_bar(position = "dodge", alpha = 0.5) +
@@ -446,14 +400,20 @@ plt_bar_drug <- pbc_data_aug %>%
     plot.title.position = "plot",
     plot.caption.position = "plot"
   ) +
-  scale_fill_discrete(name = "Drug", labels = c("Alive", "Dead")) +
-  scale_x_discrete(labels = c("Alive", "Dead"))
+  scale_fill_discrete(name = "Drug", 
+                      labels = c("placebo" = "Placebo")) +
+  scale_x_discrete(labels = c("0" = "Alive", 
+                              "1" = "Dead"))
 
 plots <- c(plots, "plt_bar_drug")
 
-l <- mget(plots)
 
 # Save plots --------------------------------------------------------------
+
+# Get all plots
+l <- mget(plots)
+
+# Save 
 invisible(mapply(
   ggsave,
   file = paste0("results/", names(l), ".png"),
