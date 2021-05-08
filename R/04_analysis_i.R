@@ -197,6 +197,7 @@ point1 <- pbc_data_aug %>%
     y = "Serum Bilirubin (mg/dl)"
   ) +
   theme(
+    text = element_text(size = 15),
     plot.title.position = "plot",
     legend.position = "none"
   ) +
@@ -221,6 +222,7 @@ point2 <- pbc_data_aug %>%
     caption = "Data from https://hbiostat.org/data/"
   ) +
   theme(
+    text = element_text(size = 15),
     plot.caption = element_text(hjust = 1, face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot"
@@ -228,8 +230,7 @@ point2 <- pbc_data_aug %>%
   scale_color_manual(name = "Mayo risk score level", values = alpha(c("red", "blue", "green"), 0.5), limit = rev) +
   scale_shape_manual(values = c(15, 17), name = "Sex")
 
-plt_bili_scatter <- (point1 | point2) + plot_annotation(title = "Scatterplot of number of follow-up days",
-                                theme = theme(plot.title = element_text(hjust = 0.5, size = 20)))
+plt_bili_scatter <- (point1 | point2)
 
 plots <- c(plots, "plt_bili_scatter")
 
@@ -310,9 +311,10 @@ b1 <- pbc_data_aug %>%
                fill = "red",
                color = "red") +
   theme_classic() +
-  labs(title = "Participants who have died (stratified by stage)",
+  labs(title = "Participants who have died",
        x = "Days to death", y = "Stage") +
   theme(
+    text = element_text(size = 20),
     plot.title.position = "plot",
     legend.position = "none"
   )
@@ -326,20 +328,20 @@ b2 <- pbc_data_aug %>%
                color = "green4") +
   theme_classic() +
   labs(
-    title = "Participants who live (stratified by stage)",
+    title = "Participants who live",
     x = "Follow-up days",
     y = "Stage",
     caption = "Data from https://hbiostat.org/data/"
   ) +
   theme(
+    text = element_text(size = 20),
     plot.caption = element_text(hjust = 1, face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot",
     legend.position = "none"
   )
 
-plt_box_fu <- (b1 | b2) + plot_annotation(title = "Boxplots of number of follow-up days",
-                                 theme = theme(plot.title = element_text(hjust = 0.5, size = 20)))
+plt_box_fu <- (b1 | b2)
 
 plots <- c(plots, "plt_box_fu")
 
@@ -422,6 +424,7 @@ plt_bar_drug <- pbc_data_aug %>%
     caption = "Data from https://hbiostat.org/data/"
   ) +
   theme(
+    text = element_text(size = 20),
     plot.caption = element_text(hjust = 1, face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot"
