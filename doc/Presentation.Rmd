@@ -11,21 +11,6 @@ output:
     smaller: true
 ---
 
-<!-- <style> -->
-
-<!-- body > slides { -->
-<!--     padding: 0; -->
-<!--     margin: -35px 0 0 -270px; -->
-<!-- } -->
-
-<!-- slides > slide{ -->
-<!--     width: 100vw; -->
-<!--     height: 100vh; -->
-<!--     border-radius: 0; -->
-<!-- } -->
-
-<!-- </style> -->
-
 <style>
 div.footnotes {
   position: absolute;
@@ -105,7 +90,7 @@ knitr::include_graphics("/cloud/project/results/plt_histogram.png")
 
 ## Table of missing values
 ```{r out.width = "23%", fig.align = "center"}
-knitr::include_graphics("/cloud/project/results/table1.png")
+knitr::include_graphics("/cloud/project/results/na_table.png")
 ```
 
 
