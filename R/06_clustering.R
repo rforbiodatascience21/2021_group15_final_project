@@ -36,17 +36,8 @@ kclust_data <-
   kclust_data %>% 
   select(-stage)
 
-
-# K clustering with 4 clusters --------------------------------------------
-kclust <- kmeans(kclust_data, centers = 4)
-kclust
-
-# The output is a list of vectors. 
-# The cluster contains information about each point.
-# centers, withinss and size contain information about each cluster.
-# totss, tot.withinss, betweenss and iter contain information about the full clustering. 
-
-# Plot 1 to 4 clusters 
+# Plot with 1-4 clusters --------------------------------------------------
+# The clustering
 kclusts <- 
   tibble(k = 1:4) %>%
   mutate(
@@ -55,7 +46,6 @@ kclusts <-
     glanced = map(kclust, glance),
     augmented = map(kclust, augment, kclust_data)
   )
-
 
 #We can turn these into three separate data sets 
 clusters <- 
@@ -70,17 +60,16 @@ clusterings <-
   kclusts %>%
   unnest(cols = c(glanced))
 
-
 # Now we can plot the original points using the data from augment(), 
 # with each point colored according to the predicted cluster.
 
-plt_clust3 <- 
+plt_clust <- 
   ggplot(assignments, aes(x = alk.phos, y = mayo.risk)) +
   geom_point(aes(color = .cluster), alpha = 0.8) + 
   facet_wrap(~ k)
 
 #We can then add centers of the cluster using the data from tidy():
-plt_clust4 <- plt_clust3 + 
+plt_clust_centers <- plt_clust + 
   geom_point(data = clusters, size = 10, shape = "x") +
   theme_classic() +
   labs(
@@ -97,8 +86,10 @@ plt_clust4 <- plt_clust3 +
     plot.caption.position = "plot"
   ) 
 
-# Plot of the the total within sum of squares and the number of clusters
 
+# Clustering variance -----------------------------------------------------
+
+# Plot of the the total within sum of squares and the number of clusters
 plt_clust_var <- ggplot(clusterings, aes(k, tot.withinss)) +
   geom_line() +
   geom_point() +
@@ -119,7 +110,7 @@ plt_clust_var <- ggplot(clusterings, aes(k, tot.withinss)) +
 # Save plots --------------------------------------------------------------
 
 plots <-
-  c("plt_clust4",
+  c("plt_clust_centers",
     "plt_clust_var")
 
 l <- mget(plots)
