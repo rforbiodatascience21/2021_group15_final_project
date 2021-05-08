@@ -114,6 +114,9 @@ knitr::include_graphics("/cloud/project/results/table1.png")
 - Created column with edema score
 - Split up edema column
 - Calculating Mayo risk score
+```{r out.width = "50%", fig.align = "center"}
+knitr::include_graphics("/cloud/project/results/table_edema.png")
+```
 
 ## Mayo risk score 
 

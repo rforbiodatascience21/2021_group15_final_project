@@ -29,10 +29,14 @@ na_table2 <- pbc_data %>%
 # Table of missing values in data -----------------------------------------
 # Create a long table of the  missing values
 na_table1_long <- na_table1 %>%  
-  pivot_longer(all_of(colnames(.)),names_to = "Variable", values_to = "NA in raw data")
+  pivot_longer(all_of(colnames(.)),
+               names_to = "Variable", 
+               values_to = "NA in raw data")
 
 na_table2_long <- 
-  na_table2 %>%  pivot_longer(all_of(colnames(.)),names_to = "Variable", values_to = "NA in clean data")
+  na_table2 %>%  pivot_longer(all_of(colnames(.)),
+                              names_to = "Variable", 
+                              values_to = "NA in clean data")
 
 # Joing the two tibbles
 na_values <- full_join(na_table1_long,na_table2_long)
@@ -41,7 +45,8 @@ na_values <- full_join(na_table1_long,na_table2_long)
 table1 <- na_values %>% 
   gt() %>% 
   tab_header(
-  title = md("Table of missing values in the data")) 
+  title = md("Table of missing values in the data"))
+  
 
 # Save in results
 table1 %>% 
