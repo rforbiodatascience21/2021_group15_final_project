@@ -3,16 +3,20 @@
 # Clear workspace ---------------------------------------------------------
 rm(list = ls())
 
+
 # Load libraries ----------------------------------------------------------
 library(tidyverse)
 library(ggplot2)
 library(tidymodels)
 
+
 # Load data ---------------------------------------------------------------
 pbc_data_aug <- read_csv("data/03_pbc_data_aug.csv")
 
+
 # Source functions --------------------------------------------------------
 source("R/99_project_functions.R")
+
 
 # Wrangle data ------------------------------------------------------------
 
@@ -36,8 +40,10 @@ kclust_data <-
   kclust_data %>% 
   select(-stage)
 
+
 # Plot with 1-4 clusters --------------------------------------------------
-# The clustering
+
+# Make the clustering
 kclusts <- 
   tibble(k = 1:4) %>%
   mutate(
@@ -47,7 +53,7 @@ kclusts <-
     augmented = map(kclust, augment, kclust_data)
   )
 
-#We can turn these into three separate data sets 
+# We can turn these into three separate data sets 
 clusters <- 
   kclusts %>%
   unnest(cols = c(tidied))
@@ -88,7 +94,6 @@ plt_clust_centers <- plt_clust +
 
 
 # Clustering variance -----------------------------------------------------
-
 kclusts <- 
   tibble(k = 1:6) %>%
   mutate(
@@ -98,7 +103,7 @@ kclusts <-
     augmented = map(kclust, augment, kclust_data)
   )
 
-#We can turn these into three separate data sets 
+# We can turn these into three separate data sets 
 clusters <- 
   kclusts %>%
   unnest(cols = c(tidied))
@@ -129,14 +134,18 @@ plt_clust_var <- ggplot(clusterings, aes(k, tot.withinss)) +
     plot.caption.position = "plot"
   ) 
 
+
 # Save plots --------------------------------------------------------------
 
+# Make list with plot names
 plots <-
   c("plt_clust_centers",
     "plt_clust_var")
 
+# Get the plots
 l <- mget(plots)
 
+# Save
 invisible(mapply(
   ggsave,
   file = paste0("results/", names(l), ".png"),
