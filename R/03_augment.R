@@ -23,6 +23,10 @@ pbc_data_clean <- pbc_data_clean %>%
                                  edema == "edema despite diuretic therapy" ~ 1)) %>% 
   relocate(edema.score, .after = edema)
 
+# select the edema column in a new tibble
+edema_col <- pbc_data_clean %>% 
+  select(edema)
+
 # calculate risk score
 risk_score <- pbc_data_clean %>%
   mutate(mayo.risk = 
