@@ -22,7 +22,7 @@ pbc_data_aug <- pbc_data_aug %>%
 
 # scale the data
 pbc_data_scaled <- pbc_data_aug %>% 
-  mutate_if(is.numeric, scale) # scale subtracts the mean and divide by the sd 
+  mutate_if(is.numeric, scale) # scale subtracts the mean and divides by the sd 
 
 # Logistic regression model -------------------------------------------------
 
@@ -35,7 +35,7 @@ pbc_data_glm <- glm(status ~., data = pbc_data_scaled, family = binomial("logit"
 glm_tidy <- tidy(pbc_data_glm, conf.int = TRUE)
 
 # plot estimates of each variable incl the confidence interval
-glm_tidy %>% 
+plt_conf <- glm_tidy %>% 
   filter(term != "(Intercept)") %>% 
   mutate(term = fct_reorder(term, desc(estimate))) %>% 
   ggplot(., aes(x=estimate, y=term)) + 
@@ -45,7 +45,14 @@ glm_tidy %>%
   theme_classic() +
   theme(legend.position = "bottom", axis.text.y = element_text(size = 6), axis.title.y = element_blank())
 
-# select p-values < 0.05
-glm_tidy %>% 
-  filter(p.value < 0.05)
+# Save plot ---------------------------------------------------------------
+
+ggsave(
+  file = "results/plt_conf.png",
+  plot = plt_conf,
+  width = 12,
+  height = 6
+)
+
+
 
