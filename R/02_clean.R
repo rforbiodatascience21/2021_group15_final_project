@@ -39,7 +39,7 @@ na_table2_long <-
                               values_to = "NA in clean data")
 
 # Joing the two tibbles
-na_values <- full_join(na_table1_long,na_table2_long)
+na_values <- full_join(na_table1_long,na_table2_long,by="Variable")
 
 # Create a table
 table1 <- na_values %>% 
