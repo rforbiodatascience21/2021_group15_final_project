@@ -4,7 +4,6 @@ rm(list = ls())
 # Load libraries ----------------------------------------------------------
 library(tidyverse)
 library(ggplot2)
-library(broom)
 
 # Load data ---------------------------------------------------------------
 pbc_data_aug <- read_csv("data/03_pbc_data_aug.csv")
