@@ -26,7 +26,6 @@ pbc_data_aug <- factor_columns(pbc_data_aug)
 plots <- c()
 
 # Create list for changing variable names in plots
-
 variable_labs <- c(
   "Serum bilirubin (mg/dL)",
   "Albumin (mg/dL)",
@@ -120,6 +119,8 @@ plots <- c(plots, "plt_bar")
 
 
 # Histograms of numeric variables -----------------------------------------
+
+# Make tibble with all numeric columns and drug column
 pbc_numeric <- pbc_data_aug %>%
   select(where(is.numeric), drug) %>%
   select(-edema,-diuretic,-edema.score,-mayo.risk) %>%
@@ -153,50 +154,8 @@ plt_histogram <- pbc_numeric %>%
 
 plots <- c(plots, "plt_histogram")
 
-# Box plot age vs. drug (stratified by sex)
-box1 <- pbc_data_aug %>%
-  ggplot(mapping = aes(x = age, y = drug, fill = sex)) +
-  geom_boxplot(alpha = 0.5) +
-  theme_classic() +
-  labs(
-    title = "Distribution of age in the two drug treatments for both sex",
-    x = "Age",
-    y = "Drug"
-  ) +
-  theme(
-    plot.title.position = "plot"
-  ) +
-  scale_fill_discrete(name = "Sex")
 
-# Box plot age vs. Mayo risk score (stratified by sex)
-box2 <- pbc_data_aug %>%
-  group_by(mayo.risk.level) %>%
-  ggplot(mapping = aes(x = age, y = mayo.risk.level)) +
-  geom_boxplot(aes(fill = sex)) +
-  scale_fill_manual(name = "Sex", values = alpha(c("blue", "red"),0.3)) +
-  theme_classic() +
-  labs(
-    title = "Distribution of age in the three Mayo risk score levels for both sex",
-    x = "Age",
-    y = "Mayo risk score level",
-    caption = "Data from https://hbiostat.org/data/"
-  ) +
-  theme(
-    plot.caption = element_text(hjust = 1, face = "italic"),
-    plot.title.position = "plot",
-    plot.caption.position = "plot"
-  ) 
-
-plt_box_age <-
-  box1 / box2 + 
-  plot_annotation(title = "Boxplot of age stratified by different variables",
-                                theme = theme(plot.title = element_text(hjust = 0.5, size = 20))) +
-  plot_layout(guides = "collect")
-
-plots <- c(plots, "plt_box_age")
-
-
-# Distribution of participants in the three Mayo risk score categories
+# Bar plot with Mayo risk score -------------------------------------------
 plt_bar_mayo <- pbc_data_aug %>%
   count(mayo.risk.level) %>%
   mutate(pct = n / sum(n) * 100) %>%
@@ -210,22 +169,32 @@ plt_bar_mayo <- pbc_data_aug %>%
     caption = "Data from https://hbiostat.org/data/",
     fill = "Mayo risk level"
   ) +
-  scale_fill_manual(labels = c("High risk: Mayo risk > 10", 
-                               "Medium risk: 8.5 < Mayo risk > 10",
-                               "Low risk: Mayo risk < 8.5"),
-                    values = alpha(c("red", "blue", "green"), 0.3),
-                    limits = rev) +
+  scale_fill_manual(
+    labels = c(
+      "High risk:\nMayo risk score > 10",
+      "Medium risk:\n8.5 < Mayo risk score > 10",
+      "Low risk:\nMayo risk score < 8.5"
+    ),
+    values = alpha(c("red", "blue", "green"), 0.3),
+    limits = rev
+  ) +
   theme(
-    text = element_text(size= 25),
+    text = element_text(size = 25),
     plot.caption = element_text(hjust = 1, face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot",
     legend.position = "right"
-  )
+  ) +
+  scale_x_discrete(labels = c(
+    "low risk" = "Low risk",
+    "medium risk" = "Medium risk",
+    "high risk" = "High risk"
+  ))
 
 plots <- c(plots, "plt_bar_mayo")
 
-# Distribution of sex in the data set
+
+# Bar plot with sex -------------------------------------------------------
 plt_bar_sex <- pbc_data_aug %>%
   count(sex) %>%
   mutate(pct = n / sum(n) * 100) %>%
@@ -240,16 +209,21 @@ plt_bar_sex <- pbc_data_aug %>%
     caption = "Data from https://hbiostat.org/data/"
   ) +
   theme(
-    text = element_text(size=30),
+    text = element_text(size = 30),
     plot.caption = element_text(hjust = 1, face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot",
     legend.position = "none"
-  ) 
+  ) +
+  scale_x_discrete(labels = c(
+    "male" = "Male",
+    "female" = "Female"
+  ))
 
 plots <- c(plots, "plt_bar_sex")
 
-# Correlation between bilirubin and number of follow up days (stratified by sex and Mayo risk score)
+
+# Scatterplot of bilirubin and follow-up days -----------------------------
 point1 <- pbc_data_aug %>%
   ggplot(mapping = aes(
     x = fu.days,
