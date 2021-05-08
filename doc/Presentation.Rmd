@@ -140,16 +140,20 @@ knitr::include_graphics("/cloud/project/results/plt_bar_mayo.png")
 knitr::include_graphics("/cloud/project/results/plt_box_age.png")
 ```
 
-## ??
-
+## Scatter plot over bilirubin
 ```{r out.width = "60%", fig.align = "center"}
-knitr::include_graphics("/cloud/project/results/plt_step_stage.png")
+knitr::include_graphics("/cloud/project/results/plt_bili_scatter.png")
 ```
 
-## ??
+## Follow-up days in relation to stage
 
 ```{r out.width = "100%", fig.align = "center"}
 knitr::include_graphics("/cloud/project/results/plt_box_fu.png")
+```
+
+## Drug
+```{r out.width = "60%", fig.align = "center"}
+knitr::include_graphics("/cloud/project/results/plt_bar_drug.png")
 ```
 
 ## Clustering for stage
