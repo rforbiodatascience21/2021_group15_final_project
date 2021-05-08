@@ -89,6 +89,28 @@ plt_clust_centers <- plt_clust +
 
 # Clustering variance -----------------------------------------------------
 
+kclusts <- 
+  tibble(k = 1:6) %>%
+  mutate(
+    kclust = map(k, ~kmeans(kclust_data, .x)),
+    tidied = map(kclust, tidy),
+    glanced = map(kclust, glance),
+    augmented = map(kclust, augment, kclust_data)
+  )
+
+#We can turn these into three separate data sets 
+clusters <- 
+  kclusts %>%
+  unnest(cols = c(tidied))
+
+assignments <- 
+  kclusts %>% 
+  unnest(cols = c(augmented))
+
+clusterings <- 
+  kclusts %>%
+  unnest(cols = c(glanced))
+
 # Plot of the the total within sum of squares and the number of clusters
 plt_clust_var <- ggplot(clusterings, aes(k, tot.withinss)) +
   geom_line() +
