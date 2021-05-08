@@ -60,11 +60,5 @@ pbc_data_clean <- pbc_data_clean %>%
   relocate(diuretic, .after = edema)
 
 
-# Create end age variable -------------------------------------------------
-pbc_data_clean <- pbc_data_clean %>% 
-  mutate(end.age = floor(age + (fu.days/365.25))) %>% 
-  relocate(end.age, .after = age)
-
-
 # Write data --------------------------------------------------------------
 write_csv(x = pbc_data_clean, file = "data/03_pbc_data_aug.csv")

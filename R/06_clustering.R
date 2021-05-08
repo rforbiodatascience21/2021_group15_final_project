@@ -46,39 +46,6 @@ kclust
 # centers, withinss and size contain information about each cluster.
 # totss, tot.withinss, betweenss and iter contain information about the full clustering. 
 
-
-# Clustering with mayo risk and albumin ---------------------------------------
-
-# Plot with 4 clusters
-kclusts <- 
-  tibble(k = 4) %>%
-  mutate(
-    kclust = map(k, ~kmeans(kclust_data, .x)),
-    tidied = map(kclust, tidy),
-    glanced = map(kclust, glance),
-    augmented = map(kclust, augment, kclust_data)
-  )
-
-#We can turn these into separate data sets 
-clusters <- 
-  kclusts %>%
-  unnest(cols = c(tidied))
-
-assignments <- 
-  kclusts %>% 
-  unnest(cols = c(augmented))
-
-# Plot the original points using the data from augment(), 
-# with each point colored according to the predicted cluster.
-
-plt_clust <- 
-  ggplot(assignments, aes(x = albumin, y = mayo.risk)) +
-  geom_point(aes(color = .cluster), alpha = 0.8)
-
-# Add centers of the clusters:
-plt_clust2 <- plt_clust + geom_point(data = clusters, size = 10, shape = "x")
-
-
 # Plot 1 to 4 clusters 
 kclusts <- 
   tibble(k = 1:4) %>%
@@ -108,45 +75,51 @@ clusterings <-
 # with each point colored according to the predicted cluster.
 
 plt_clust3 <- 
-  ggplot(assignments, aes(x = albumin, y = mayo.risk)) +
+  ggplot(assignments, aes(x = alk.phos, y = mayo.risk)) +
   geom_point(aes(color = .cluster), alpha = 0.8) + 
   facet_wrap(~ k)
 
 #We can then add centers of the cluster using the data from tidy():
-plt_clust4 <- plt_clust3 + geom_point(data = clusters, size = 10, shape = "x")
+plt_clust4 <- plt_clust3 + 
+  geom_point(data = clusters, size = 10, shape = "x") +
+  theme_classic() +
+  labs(
+    title = "K-means clustering",
+    x = "Alkaline phosphatase (U/Liter)",
+    y = "Mayo risk score",
+    caption = "Data from https://hbiostat.org/data/",
+    color = "Cluster"
+  ) +
+  theme(
+    text = element_text(size = 20),
+    plot.caption = element_text(hjust = 1, face = "italic"),
+    plot.title.position = "plot",
+    plot.caption.position = "plot"
+  ) 
 
 # Plot of the the total within sum of squares and the number of clusters
 
 plt_clust_var <- ggplot(clusterings, aes(k, tot.withinss)) +
   geom_line() +
-  geom_point()
-
-
-# Clustering with mayo risk and alk.phos  --------------------------------------------------------
-
-# Plot with 1 to 4 clusters
-
-# Now we can plot the original points using the data from augment(), 
-# with each point colored according to the predicted cluster.
-
-p1 <- 
-  ggplot(assignments, aes(x = alk.phos, y = mayo.risk)) +
-  geom_point(aes(color = .cluster), alpha = 0.8) + 
-  facet_wrap(~ k)
-p1
-
-#We can then add centers of the cluster using the data from tidy():
-p2 <- p1 + geom_point(data = clusters, size = 10, shape = "x")
-p2
-
+  geom_point() +
+  theme_classic() +
+  labs(
+    title = "K-means clustering",
+    x = "Number of clusters",
+    y = "Total within-cluster sum of squares",
+    caption = "Data from https://hbiostat.org/data/"
+  ) +
+  theme(
+    text = element_text(size = 20),
+    plot.caption = element_text(hjust = 1, face = "italic"),
+    plot.title.position = "plot",
+    plot.caption.position = "plot"
+  ) 
 
 # Save plots --------------------------------------------------------------
 
 plots <-
-  c("plt_clust1",
-    "plt_clust2",
-    "plt_clust3",
-    "plt_clust4",
+  c("plt_clust4",
     "plt_clust_var")
 
 l <- mget(plots)
