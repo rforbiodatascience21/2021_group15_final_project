@@ -11,7 +11,8 @@ pbc_data_clean <- read_csv("data/02_pbc_data_clean.csv")
 # Calculate Mayo Risk score -----------------------------------------------
 
 # to use the "join" functions we create a separate data frame containing the risk score
-# the two data frames must be joined by a shared column so we create a column with row number in the data set
+# the two data frames must be joined by a shared column 
+# so we create a column with row number in the data set
 
 # create column with row number
 pbc_data_clean <- pbc_data_clean %>% 
@@ -94,8 +95,6 @@ table_edema <- edema_both %>%
 # Save in results
 table_edema %>% 
   gtsave(filename = "results/table_edema.png")
-
-
 
 # Write data --------------------------------------------------------------
 write_csv(x = pbc_data_clean, file = "data/03_pbc_data_aug.csv")
