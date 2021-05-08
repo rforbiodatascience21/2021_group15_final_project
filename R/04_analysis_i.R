@@ -162,8 +162,8 @@ plt_bar_sex <- pbc_data_aug %>%
   count(sex) %>%
   mutate(pct = n / sum(n) * 100) %>%
   ggplot(aes(x = sex, y = pct)) +
-  geom_bar(stat = "identity", aes(fill = sex), alpha = 0.3) +
-  scale_fill_manual(values = c("blue", "red")) +
+  geom_bar(stat = "identity", aes(fill = sex), alpha = 0.5) +
+  scale_fill_discrete(limits = rev) +
   theme_classic() +
   labs(
     title = "Distribution of sex in the data",
@@ -202,7 +202,8 @@ point1 <- pbc_data_aug %>%
     legend.position = "none"
   ) +
   scale_shape_manual(values = c(15, 17), name = "Sex") +
-  scale_color_manual(name = "Mayo risk score level", values = alpha(c("red", "blue", "green"), 0.5), limits = rev)
+  scale_color_manual(name = "Mayo risk score level", 
+                     values = alpha(c("red", "blue", "green"), 0.5), limits = rev)
 
 # Correlation between bilirubin and time to death (stratified by sex and Mayo risk score)
 point2 <- pbc_data_aug %>%
@@ -304,44 +305,18 @@ plots <- c(plots, "plt_hist_fu")
 # Boxplot of the variable follow up days
 
 # Boxplot of time to death (stratified by stage)
-b1 <- pbc_data_aug %>%
-  filter(status == 1) %>%
-  ggplot(mapping = aes(x = fu.days, y = stage)) +
-  geom_boxplot(alpha = 0.3,
-               fill = "red",
-               color = "red") +
+plt_box_fu <- pbc_data_aug %>%
+  ggplot(mapping = aes(x = fu.days, y = stage, fill = status)) +
+  geom_boxplot(alpha = 0.5) +
   theme_classic() +
   labs(title = "Participants who have died",
        x = "Days to death", y = "Stage") +
   theme(
     text = element_text(size = 20),
-    plot.title.position = "plot",
-    legend.position = "none"
-  )
-
-# Boxplot of time to end of study (stratified by stage)
-b2 <- pbc_data_aug %>%
-  filter(status == 0) %>%
-  ggplot(mapping = aes(x = fu.days, y = stage)) +
-  geom_boxplot(alpha = 0.2,
-               fill = "green4",
-               color = "green4") +
-  theme_classic() +
-  labs(
-    title = "Participants who live",
-    x = "Follow-up days",
-    y = "Stage",
-    caption = "Data from https://hbiostat.org/data/"
+    plot.title.position = "plot"
   ) +
-  theme(
-    text = element_text(size = 20),
-    plot.caption = element_text(hjust = 1, face = "italic"),
-    plot.title.position = "plot",
-    plot.caption.position = "plot",
-    legend.position = "none"
-  )
-
-plt_box_fu <- (b1 | b2)
+  scale_fill_discrete(labels = c("Alive", 
+                                 "Dead"))
 
 plots <- c(plots, "plt_box_fu")
 
@@ -429,7 +404,8 @@ plt_bar_drug <- pbc_data_aug %>%
     plot.title.position = "plot",
     plot.caption.position = "plot"
   ) +
-  scale_fill_discrete(name = "Drug")
+  scale_fill_discrete(name = "Drug", labels = c("Alive", "Dead")) +
+  scale_x_discrete(labels = c("Alive", "Dead"))
 
 plots <- c(plots, "plt_bar_drug")
 
