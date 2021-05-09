@@ -133,7 +133,7 @@ knitr::include_graphics("/cloud/project/results/plt_box_fu.png")
 
 ## Drug
 ```{r out.width = "100%", fig.align = "center"}
-knitr::include_graphics("/cloud/project/results/plt_bar_drug.png")
+knitr::include_graphics("/cloud/project/results/plt_drug.png")
 ```
 
 ## Logistic regression
@@ -153,7 +153,7 @@ knitr::include_graphics("/cloud/project/results/plt_clust_var.png")
 
 ## Clustering 1-4 clusters
 ```{r out.width = "100%", fig.align = "center"}
-knitr::include_graphics("/cloud/project/results/plt_clust4.png")
+knitr::include_graphics("/cloud/project/results/plt_clust_centers.png")
 ```
 
 ## Discussion
@@ -164,8 +164,3 @@ Some notes:
 We can conclude that we don't see a positive difference in participants given the drug and participants given placebo. 
 Other studies have shown that this drug may course liver problems, which may be the reason our plots show a tendency of people given the placebo living longer.
 
-(Boxplot of follow-up days on x axis, status 1 on y axis and stratified by drug treatment)
-
-```{r out.width = "60%", fig.align = "center"}
-knitr::include_graphics("/cloud/project/results/plt_box_fu3.png")
-```
