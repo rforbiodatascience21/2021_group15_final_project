@@ -14,10 +14,6 @@ library(tidymodels)
 pbc_data_aug <- read_csv("data/03_pbc_data_aug.csv")
 
 
-# Source functions --------------------------------------------------------
-source("R/99_project_functions.R")
-
-
 # Wrangle data ------------------------------------------------------------
 
 # We will use the  kmeans() function, which only takes numeric columns
@@ -49,11 +45,10 @@ kclusts <-
   mutate(
     kclust = map(k, ~kmeans(kclust_data, .x)),
     tidied = map(kclust, tidy),
-    glanced = map(kclust, glance),
     augmented = map(kclust, augment, kclust_data)
   )
 
-# We can turn these into three separate data sets 
+# We can turn these into two separate data sets 
 clusters <- 
   kclusts %>%
   unnest(cols = c(tidied))
@@ -61,10 +56,6 @@ clusters <-
 assignments <- 
   kclusts %>% 
   unnest(cols = c(augmented))
-
-clusterings <- 
-  kclusts %>%
-  unnest(cols = c(glanced))
 
 # Now we can plot the original points using the data from augment(), 
 # with each point colored according to the predicted cluster.
@@ -94,30 +85,20 @@ plt_clust_centers <- plt_clust +
 
 
 # Clustering variance -----------------------------------------------------
-kclusts <- 
+kclusts_var <- 
   tibble(k = 1:6) %>%
   mutate(
     kclust = map(k, ~kmeans(kclust_data, .x)),
-    tidied = map(kclust, tidy),
-    glanced = map(kclust, glance),
-    augmented = map(kclust, augment, kclust_data)
+    glanced = map(kclust, glance)
   )
 
-# We can turn these into three separate data sets 
-clusters <- 
-  kclusts %>%
-  unnest(cols = c(tidied))
-
-assignments <- 
-  kclusts %>% 
-  unnest(cols = c(augmented))
-
-clusterings <- 
-  kclusts %>%
+# We can turn it into a separate data set
+clusterings_var <- 
+  kclusts_var %>%
   unnest(cols = c(glanced))
 
 # Plot of the the total within sum of squares and the number of clusters
-plt_clust_var <- ggplot(clusterings, aes(k, tot.withinss)) +
+plt_clust_var <- ggplot(clusterings_var, aes(k, tot.withinss)) +
   geom_line() +
   geom_point() +
   theme_classic() +

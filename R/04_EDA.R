@@ -33,7 +33,7 @@ variable_labs <- c(
   "Prothrombin time (seconds)",
   "Sex",
   "Follow-up days",
-  "Age",
+  "Age (years)",
   "Spiders",
   "Hepatom",
   "Ascites",
@@ -311,65 +311,21 @@ plt_box_fu <- pbc_data_aug %>%
 
 plots <- c(plots, "plt_box_fu")
 
-# Boxplot of time to death 
-box_fu1 <- pbc_data_aug %>%
-  filter(status == 1) %>%
-  ggplot(mapping = aes(x = fu.days, y = stage, fill = drug)) +
-  geom_boxplot(alpha = 0.5) +
-  theme_classic() +
-  labs(
-    title = "Boxplot of days to death",
-    x = "Days to death",
-    y = "Stage"
-  ) +
-  theme(
-    plot.title.position = "plot",
-  ) +
-  scale_fill_discrete(name = "Drug") +
-  scale_x_continuous(limits = c(0,5000))
 
-# Boxplot of follow-up days
-box_fu2 <- pbc_data_aug %>%
-  ggplot(mapping = aes(x = fu.days, y = status, fill = drug)) +
-  geom_boxplot(alpha = 0.5) +
-  theme_classic() +
-  labs(
-    title = "Number of follow-up days (stratified by status and drug)",
-    x = "Follow-up days",
-    y = "Status",
-    caption = "Data from https://hbiostat.org/data/"
-  ) +
-  theme(
-    plot.caption = element_text(hjust = 1, face = "italic"),
-    plot.title.position = "plot",
-    plot.caption.position = "plot"
-  ) +
-  scale_fill_discrete(name = "Drug",
-                      labels = c("placebo" = "Placebo")) +
-  scale_x_continuous(limits = c(0, 5000)) +
-  scale_y_discrete(labels = c("0" = "Alive",
-                              "1" = "Dead"))
-
-plt_box_fu2 <- box_fu1 / box_fu2 +
-  plot_annotation(title = "Boxplots of number of follow-up days",
-                  theme = theme(plot.title = element_text(hjust = 0.5, size = 20))) +
-  plot_layout(guides = "collect")
-
-plots <- c(plots, "plt_box_fu2")
-
-# Boxplot of follow-up days (dead participants only)
-plt_box_fu3 <- pbc_data_aug %>%
+# Plots of drug distribution --------------------------------------------
+plt_box_drug <- pbc_data_aug %>%
   filter(status == 1) %>%
   ggplot(mapping = aes(x = fu.days, y = status, fill = drug)) +
   geom_boxplot(alpha = 0.5) +
   theme_classic() +
   labs(
-    title = "Number of follow-up days (stratified by status 1 and drug)",
-    x = "Follow-up days",
-    y = "",
+    title = "Days to death",
+    x = "Days to death", 
+    y = "", 
     caption = "Data from https://hbiostat.org/data/"
   ) +
   theme(
+    text = element_text(size = 20),
     axis.text.y = element_blank(),
     axis.ticks = element_blank(),
     plot.caption = element_text(hjust = 1, face = "italic"),
@@ -380,32 +336,31 @@ plt_box_fu3 <- pbc_data_aug %>%
                       labels = c("placebo" = "Placebo")) +
   scale_x_continuous(limits = c(0, 5000))
 
-plots <- c(plots, "plt_box_fu3")
 
-
-# Barplot of drug distribution --------------------------------------------
 plt_bar_drug <- pbc_data_aug %>%
   ggplot(aes(x = status, fill = drug)) +
   geom_bar(position = "dodge", alpha = 0.5) +
   theme_classic() +
   labs(
-    title = "Number of participants in status 0 or 1 in relation to the two drugs",
+    title = "Drug distribution",
     x = "Status",
-    y = "Count",
-    caption = "Data from https://hbiostat.org/data/"
+    y = "Count"
   ) +
   theme(
     text = element_text(size = 20),
     plot.caption = element_text(hjust = 1, face = "italic"),
     plot.title.position = "plot",
-    plot.caption.position = "plot"
+    plot.caption.position = "plot", 
+    legend.position = "none"
   ) +
   scale_fill_discrete(name = "Drug", 
                       labels = c("placebo" = "Placebo")) +
   scale_x_discrete(labels = c("0" = "Alive", 
                               "1" = "Dead"))
 
-plots <- c(plots, "plt_bar_drug")
+plt_drug <- plt_bar_drug | plt_box_drug 
+
+plots <- c(plots, "plt_drug")
 
 
 # Save plots --------------------------------------------------------------

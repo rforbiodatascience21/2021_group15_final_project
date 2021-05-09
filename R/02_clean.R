@@ -5,7 +5,6 @@ rm(list = ls())
 # Load libraries ----------------------------------------------------------
 library(tidyverse)
 library(gt) # generate display tables
-library(webshot)
 
 
 # Load data ---------------------------------------------------------------

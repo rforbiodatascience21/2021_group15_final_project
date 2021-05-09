@@ -28,10 +28,10 @@ pbc_data_clean <- pbc_data_clean %>%
                                  edema == "edema despite diuretic therapy" ~ 1)) %>% 
   relocate(edema.score, .after = edema)
 
-# Select the edema column in a new tibble
+# Store the edema column in a new tibble for making table later
 edema_col <- pbc_data_clean %>% 
   select(edema) %>% 
-  slice(1:5) %>% 
+  slice(1:3) %>% 
   mutate(row.number = rownames(.))
 
 # Calculate risk score
@@ -70,16 +70,13 @@ pbc_data_clean <- pbc_data_clean %>%
 # Edema table -------------------------------------------------------------
 edema_new <- pbc_data_clean %>% 
   select(edema,diuretic,edema.score) %>% 
-  mutate(edema_new = edema) %>% 
-  select(-edema) %>% 
-  relocate(edema_new, .before = diuretic) %>% 
-  slice(1:5) %>% 
+  rename(edema_new = edema) %>%
+  slice(1:3) %>% 
   mutate(row.number = rownames(.))
 
 edema_both <- edema_col %>% 
-  mutate(edema_raw = edema) %>% 
-  select(-edema) %>% 
-  left_join(.,edema_new,by="row.number") %>% 
+  rename(edema_raw = edema) %>%
+  full_join(.,edema_new,by="row.number") %>% 
   select(-row.number)
 
 table_edema <- edema_both %>% 
@@ -97,8 +94,12 @@ table_edema <- edema_both %>%
 
 
 # Write data --------------------------------------------------------------
-write_csv(x = pbc_data_clean, file = "data/03_pbc_data_aug.csv")
+pbc_data_aug <- pbc_data_clean 
 
-# Save in results
+write_csv(x = pbc_data_aug, file = "data/03_pbc_data_aug.csv")
+
+
+# Save in results ---------------------------------------------------------
 table_edema %>% 
   gtsave(filename = "results/table_edema.png")
+
