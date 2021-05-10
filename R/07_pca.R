@@ -5,10 +5,14 @@ rm(list = ls())
 # Load libraries ----------------------------------------------------------
 library(tidyverse)
 library(ggplot2)
+library(patchwork)
 
 
 # Load data ---------------------------------------------------------------
 pbc_data_aug <- read_csv("data/03_pbc_data_aug.csv")
+
+
+# Wrangle data ------------------------------------------------------------
 
 # We dont want to include the variables we calculated from other variables 
 # as these columns cannot be considered independent
@@ -18,13 +22,7 @@ pbc_data_aug <- pbc_data_aug %>%
     mayo.risk,
     mayo.risk.level))
 
-# Factor status to use as outcome variable
-pbc_data_aug <- pbc_data_aug %>% 
-  mutate(drug = factor(drug, 
-                         levels = c("placebo", 
-                                    "D-penicillamine")))
-
-
+# For the PCA all columns must be numeric
 pbc_data_aug <- pbc_data_aug %>% 
   mutate(sex = case_when(sex == "female" ~ 0,
                          sex == "male" ~ 1)) %>% 
@@ -34,17 +32,36 @@ pbc_data_aug <- pbc_data_aug %>%
             list(~ case_when(. == "absent" ~ 0,
                              . == "present" ~ 1)))
 
+# Nest the tibble to make the PCA more straight forward
 pbc_data_nested <- pbc_data_aug %>% 
   nest(pbc_data=everything()) 
 
-pbc_data_pca <- pbc_data_nested %>% 
-  mutate(pca = map(pbc_data, 
-                   ~ prcomp(.x %>% select(-drug), 
-                            center = TRUE, 
-                            scale = TRUE))) %>% 
-  mutate(pca_aug = map2(pca, pbc_data, ~augment(.x, data = .y))) %>% 
-  mutate(pca_tidy = map2(pca, pbc_data, ~tidy(.x, data = .y, "pcs")))
 
+# PCA ---------------------------------------------------------------------
+
+# Make PCA and add augmented and tidied columns to the tibble
+pbc_data_pca <- pbc_data_nested %>%
+  mutate(pca = map(pbc_data,
+                   ~ prcomp(
+                     .x %>% 
+                       select(-drug),
+                     center = TRUE,
+                     scale = TRUE
+                   ))) %>%
+  mutate(pca_aug = map2(pca,
+                        pbc_data, 
+                        ~ augment(.x, 
+                                  data = .y))) %>%
+  mutate(pca_tidy = map2(pca, 
+                         pbc_data, 
+                         ~ tidy(.x, 
+                                data = .y, 
+                                matrix = "pcs")))
+# "pcs" is an argument to the tidy function
+# that gives information about the eigenvalues
+
+
+# Visualization -----------------------------------------------------------
 
 
 # Plot variance explained -------------------------------------------------
@@ -57,8 +74,14 @@ plt_pca_bar <- pbc_data_pca %>%
     x = PC, 
     y = percent)) +
   geom_bar(stat = "identity") +
-  labs(y = "Variance Explained") +
-  theme_classic()
+  labs(y = "Variance Explained",
+       title = "Variance explained by each PC") +
+  theme_classic() +
+  theme(
+    text = element_text(size = 14),
+    plot.title.position = "plot"
+  )
+
 
 # Plot PC1 vs. PC2 --------------------------------------------------------
 
@@ -71,7 +94,23 @@ plt_pca_scatter <- pbc_data_pca %>%
     y = .fittedPC2, 
     color = drug)) +
   geom_point() +
-  labs(x = "PC1", y = "PC2")
+  labs(title = "Scatter plot of PC1 vs. PC2",
+       x = "PC1", 
+       y = "PC2",
+       caption = "Data from https://hbiostat.org/data/") +
+  theme_classic() +
+  theme(
+    text = element_text(size = 14),
+    legend.position = "bottom",
+    plot.caption = element_text(hjust = 1, 
+                                face = "italic"),
+    plot.title.position = "plot",
+    ) +
+  scale_color_discrete(name = "Drug",
+                       labels = c("placebo" = "Placebo"))
+
+# Combine plots
+plt_pca <- plt_pca_bar | plt_pca_scatter
 
 
 # Save plots --------------------------------------------------------------
