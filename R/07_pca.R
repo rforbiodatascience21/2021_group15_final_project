@@ -85,6 +85,9 @@ plt_pca_bar <- pbc_data_pca %>%
     y = cumulative,
     color = "#F8766D"
   )) +
+  geom_hline(yintercept = 0.9,
+             linetype = "dashed",
+             color = "gray") +
   labs(y = "Variance explained",
        title = "Individual PC and cumulative variance explained") +
   theme_classic() +
