@@ -5,6 +5,7 @@ source(file = "R/03_augment.R")
 source(file = "R/04_EDA.R")
 source(file = "R/05_logistic_reg.R")
 source(file = "R/06_clustering.R")
+source(file = "R/07_pca.R")
 
 
 # Knit the Presentation slides --------------------------------------------
