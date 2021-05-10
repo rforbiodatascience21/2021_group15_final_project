@@ -9,4 +9,3 @@ source(file = "R/06_clustering.R")
 
 # Knit the Presentation slides --------------------------------------------
 rmarkdown::render('doc/Presentation.Rmd',output_file='Presentation.html')
-rmarkdown::render('doc/Presentation.Rmd',output_file='Presentation.html.gz')
