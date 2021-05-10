@@ -83,8 +83,8 @@ plt_pca_bar <- pbc_data_pca %>%
     y = cumulative,
     color = "#F8766D"
   )) +
-  labs(y = "Variance Explained",
-       title = "Variance explained by each PC") +
+  labs(y = "Variance explained",
+       title = "Individual PC and cumulative variance explained") +
   theme_classic() +
   theme(
     text = element_text(size = 14),
@@ -111,20 +111,13 @@ plt_pca_scatter <- pbc_data_pca %>%
   theme_classic() +
   theme(
     text = element_text(size = 14),
-    legend.position = "bottom",
+    legend.position = "top",
     plot.caption = element_text(hjust = 1, 
                                 face = "italic"),
     plot.title.position = "plot",
     ) +
   scale_color_discrete(name = "Drug",
                        labels = c("placebo" = "Placebo"))
-
-
-pbc_data_pca %>% 
-  unnest(pca_tidy) %>% 
-  ggplot(mapping = aes(x = PC, y = cumulative)) +
-  geom_line() +
-  geom_point()
 
 # Combine plots
 plt_pca <- plt_pca_bar | plt_pca_scatter
