@@ -73,13 +73,23 @@ plt_pca_bar <- pbc_data_pca %>%
   ggplot(mapping = aes(
     x = PC, 
     y = percent)) +
-  geom_bar(stat = "identity") +
+  geom_bar(stat = "identity",
+           fill = "#00BFC4") +
+  geom_line(mapping = aes(
+    y = cumulative,
+    color = "#F8766D"
+  )) +
+  geom_point(mapping = aes(
+    y = cumulative,
+    color = "#F8766D"
+  )) +
   labs(y = "Variance Explained",
        title = "Variance explained by each PC") +
   theme_classic() +
   theme(
     text = element_text(size = 14),
-    plot.title.position = "plot"
+    plot.title.position = "plot",
+    legend.position = "none"
   )
 
 
@@ -108,6 +118,13 @@ plt_pca_scatter <- pbc_data_pca %>%
     ) +
   scale_color_discrete(name = "Drug",
                        labels = c("placebo" = "Placebo"))
+
+
+pbc_data_pca %>% 
+  unnest(pca_tidy) %>% 
+  ggplot(mapping = aes(x = PC, y = cumulative)) +
+  geom_line() +
+  geom_point()
 
 # Combine plots
 plt_pca <- plt_pca_bar | plt_pca_scatter
