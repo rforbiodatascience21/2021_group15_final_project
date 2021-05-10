@@ -80,7 +80,9 @@ names(variable_labs) <- c(
 
 # Bar plots of data set overview ------------------------------------------
 bar1 <- pbc_data_aug %>%
-  ggplot(mapping = aes(x = stage, fill = stage)) +
+  ggplot(mapping = aes(
+    x = stage, 
+    fill = stage)) +
   geom_bar(alpha = 0.5) +
   theme_classic() +
   labs(
@@ -95,7 +97,9 @@ bar1 <- pbc_data_aug %>%
   ) 
 
 bar2 <- pbc_data_aug %>%
-  ggplot(mapping = aes(x = drug, fill = drug)) +
+  ggplot(mapping = aes(
+    x = drug, 
+    fill = drug)) +
   geom_bar(alpha = 0.5) +
   theme_classic() +
   labs(
@@ -106,7 +110,8 @@ bar2 <- pbc_data_aug %>%
   ) +
   theme(
     text = element_text(size = 20),
-    plot.caption = element_text(hjust = 1, face = "italic"),
+    plot.caption = element_text(hjust = 1, 
+                                face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot",
     legend.position = "none"
@@ -115,20 +120,31 @@ bar2 <- pbc_data_aug %>%
 plt_bar <- bar1 | bar2 
 
 # Append plot name to plots list
-plots <- c(plots, "plt_bar")
+plots <- c(plots, 
+           "plt_bar")
 
 
 # Histograms of numeric variables -----------------------------------------
 
 # Make tibble with all numeric columns and drug column
 pbc_numeric <- pbc_data_aug %>%
-  select(where(is.numeric), drug) %>%
-  select(-edema,-diuretic,-edema.score,-mayo.risk) %>%
-  pivot_longer(-drug, names_to = "key", values_to = "value")
+  select(where(is.numeric), 
+         drug) %>%
+  select(-c(edema,
+         diuretic,
+         edema.score,
+         mayo.risk)) %>%
+  pivot_longer(-drug, 
+               names_to = "key", 
+               values_to = "value")
 
 plt_histogram <- pbc_numeric %>%
-  ggplot(mapping = aes(value, color = factor(drug))) +
-  geom_freqpoly(alpha = 0.5, bins = 30, size = 2) +
+  ggplot(mapping = aes(
+    x = value, 
+    color = factor(drug))) +
+  geom_freqpoly(alpha = 0.5, 
+                bins = 30, 
+                size = 2) +
   facet_wrap( ~ key,
               scales = 'free',
               labeller = labeller(key = variable_labs)) +
@@ -141,7 +157,8 @@ plt_histogram <- pbc_numeric %>%
   ) +
   theme(
     text = element_text(size = 14),
-    plot.caption = element_text(hjust = 1, face = "italic"),
+    plot.caption = element_text(hjust = 1, 
+                                face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot",
     axis.text.x = element_text(
@@ -152,14 +169,18 @@ plt_histogram <- pbc_numeric %>%
   )  +
   scale_color_discrete(name = "Drug")
 
-plots <- c(plots, "plt_histogram")
+plots <- c(plots, 
+           "plt_histogram")
 
 
 # Bar plot with Mayo risk score -------------------------------------------
 plt_bar_mayo <- pbc_data_aug %>%
   count(mayo.risk.level) %>%
   mutate(pct = n / sum(n) * 100) %>%
-  ggplot(mapping = aes(x = mayo.risk.level, y = pct, fill = mayo.risk.level)) +
+  ggplot(mapping = aes(
+    x = mayo.risk.level, 
+    y = pct, 
+    fill = mayo.risk.level)) +
   geom_bar(stat = "identity") +
   theme_classic() +
   labs(
@@ -176,12 +197,16 @@ plt_bar_mayo <- pbc_data_aug %>%
       "Low risk:\nMayo risk score < 8.5"
     ),
     name = "Mayo risk score level",
-    values = alpha(c("red", "blue", "green"), 0.3),
+    values = alpha(c("red", 
+                     "blue", 
+                     "green"), 
+                   0.3),
     limits = rev
   ) +
   theme(
     text = element_text(size = 25),
-    plot.caption = element_text(hjust = 1, face = "italic"),
+    plot.caption = element_text(hjust = 1, 
+                                face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot",
     legend.position = "right"
@@ -192,15 +217,20 @@ plt_bar_mayo <- pbc_data_aug %>%
     "high risk" = "High risk"
   ))
 
-plots <- c(plots, "plt_bar_mayo")
+plots <- c(plots, 
+           "plt_bar_mayo")
 
 
 # Bar plot with sex -------------------------------------------------------
 plt_bar_sex <- pbc_data_aug %>%
   count(sex) %>%
   mutate(pct = n / sum(n) * 100) %>%
-  ggplot(mapping = aes(x = sex, y = pct, fill = sex)) +
-  geom_bar(stat = "identity", alpha = 0.5) +
+  ggplot(mapping = aes(
+    x = sex,
+    y = pct,
+    fill = sex)) +
+  geom_bar(stat = "identity",
+           alpha = 0.5) +
   scale_fill_discrete(limits = rev) +
   theme_classic() +
   labs(
@@ -211,17 +241,17 @@ plt_bar_sex <- pbc_data_aug %>%
   ) +
   theme(
     text = element_text(size = 30),
-    plot.caption = element_text(hjust = 1, face = "italic"),
+    plot.caption = element_text(hjust = 1,
+                                face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot",
     legend.position = "none"
   ) +
-  scale_x_discrete(labels = c(
-    "male" = "Male",
-    "female" = "Female"
-  ))
+  scale_x_discrete(labels = c("male" = "Male",
+                              "female" = "Female"))
 
-plots <- c(plots, "plt_bar_sex")
+plots <- c(plots, 
+           "plt_bar_sex")
 
 
 # Scatterplot of bilirubin and follow-up days -----------------------------
@@ -244,9 +274,13 @@ point1 <- pbc_data_aug %>%
     plot.title.position = "plot",
     legend.position = "none"
   ) +
-  scale_shape_manual(values = c(15, 17), name = "Sex") +
+  scale_shape_manual(values = c(15, 17), 
+                     name = "Sex") +
   scale_color_manual(name = "Mayo risk score level",
-                     values = alpha(c("red", "blue", "green"), 0.3),
+                     values = alpha(c("red", 
+                                      "blue", 
+                                      "green"), 
+                                    0.3),
                      limits = rev)
 
 # Scatter plot with participants who die
@@ -268,7 +302,8 @@ point2 <- pbc_data_aug %>%
   ) +
   theme(
     text = element_text(size = 15),
-    plot.caption = element_text(hjust = 1, face = "italic"),
+    plot.caption = element_text(hjust = 1, 
+                                face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot"
   ) +
@@ -279,43 +314,56 @@ point2 <- pbc_data_aug %>%
       "low risk" = "Low risk"
     ),
     name = "Mayo risk score level",
-    values = alpha(c("red", "blue", "green"), 0.3),
+    values = alpha(c("red", 
+                     "blue", 
+                     "green"), 
+                   0.3),
     limit = rev
   ) +
   scale_shape_manual(
     labels = c("male" = "Male",
                "female" = "Female"),
-    values = c(15, 17),
+    values = c(15, 
+               17),
     name = "Sex"
   )
 
 plt_bili_scatter <- (point1 | point2)
 
-plots <- c(plots, "plt_bili_scatter")
+plots <- c(plots, 
+           "plt_bili_scatter")
 
 
 # Boxplots with follow-up days --------------------------------------------
 
 # Boxplot of number of follow-up days
 plt_box_fu <- pbc_data_aug %>%
-  ggplot(mapping = aes(x = fu.days, y = stage, fill = status)) +
+  ggplot(mapping = aes(
+    x = fu.days,
+    y = stage, 
+    fill = status)) +
   geom_boxplot(alpha = 0.5) +
   theme_classic() +
   labs(title = "Boxplot of follow-up days",
-       x = "Follow-up days", y = "Stage") +
+       x = "Follow-up days", 
+       y = "Stage") +
   theme(text = element_text(size = 20),
         plot.title.position = "plot") +
   scale_fill_discrete(labels = c("0" = "Alive",
                                  "1" = "Dead"),
                       name = "Status")
 
-plots <- c(plots, "plt_box_fu")
+plots <- c(plots, 
+           "plt_box_fu")
 
 
 # Plots of drug distribution --------------------------------------------
 plt_box_drug <- pbc_data_aug %>%
   filter(status == 1) %>%
-  ggplot(mapping = aes(x = fu.days, y = status, fill = drug)) +
+  ggplot(mapping = aes(
+    x = fu.days, 
+    y = status, 
+    fill = drug)) +
   geom_boxplot(alpha = 0.5) +
   theme_classic() +
   labs(
@@ -328,18 +376,23 @@ plt_box_drug <- pbc_data_aug %>%
     text = element_text(size = 20),
     axis.text.y = element_blank(),
     axis.ticks = element_blank(),
-    plot.caption = element_text(hjust = 1, face = "italic"),
+    plot.caption = element_text(hjust = 1, 
+                                face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot"
   ) +
   scale_fill_discrete(name = "Drug",
                       labels = c("placebo" = "Placebo")) +
-  scale_x_continuous(limits = c(0, 5000))
+  scale_x_continuous(limits = c(0, 
+                                5000))
 
 
 plt_bar_drug <- pbc_data_aug %>%
-  ggplot(aes(x = status, fill = drug)) +
-  geom_bar(position = "dodge", alpha = 0.5) +
+  ggplot(aes(
+    x = status, 
+    fill = drug)) +
+  geom_bar(position = "dodge", 
+           alpha = 0.5) +
   theme_classic() +
   labs(
     title = "Drug distribution",
@@ -348,7 +401,8 @@ plt_bar_drug <- pbc_data_aug %>%
   ) +
   theme(
     text = element_text(size = 20),
-    plot.caption = element_text(hjust = 1, face = "italic"),
+    plot.caption = element_text(hjust = 1, 
+                                face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot", 
     legend.position = "none"
@@ -360,7 +414,8 @@ plt_bar_drug <- pbc_data_aug %>%
 
 plt_drug <- plt_bar_drug | plt_box_drug 
 
-plots <- c(plots, "plt_drug")
+plots <- c(plots, 
+           "plt_drug")
 
 
 # Save plots --------------------------------------------------------------
@@ -371,7 +426,9 @@ l <- mget(plots)
 # Save 
 invisible(mapply(
   ggsave,
-  file = paste0("results/", names(l), ".png"),
+  file = paste0("results/", 
+                names(l), 
+                ".png"),
   plot = l,
   width = 12,
   height = 6
