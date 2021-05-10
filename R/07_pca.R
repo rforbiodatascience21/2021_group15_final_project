@@ -114,25 +114,12 @@ plt_pca <- plt_pca_bar | plt_pca_scatter
 
 
 # Save plots --------------------------------------------------------------
-
-# Make list with plot names
-plots <-
-  c("plt_pca_bar",
-    "plt_pca_scatter")
-
-# Get the plots
-l <- mget(plots)
-
-# Save
-invisible(mapply(
-  ggsave,
-  file = paste0("results/", 
-                names(l), 
-                ".png"),
-  plot = l,
+ggsave(
+  file = "results/plt_pca.png",
+  plot = plt_pca,
   width = 12,
   height = 6
-))
+)
 
 
 
