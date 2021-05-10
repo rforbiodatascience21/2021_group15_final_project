@@ -79,7 +79,7 @@ knitr::include_graphics("/cloud/project/results/plt_bar_sex.png")
 ---
 
 ```{r out.width = "100%", fig.align = "center"}
-knitr::include_graphics("/cloud/project/results/plt_histogram.png")
+knitr::include_graphics("/cloud/project/results/plt_freq.png")
 ```
 
 ## Data wrangling

@@ -139,7 +139,7 @@ pbc_numeric <- pbc_data_aug %>%
                names_to = "key", 
                values_to = "value")
 
-plt_histogram <- pbc_numeric %>%
+plt_freq <- pbc_numeric %>%
   ggplot(mapping = aes(
     x = value, 
     color = factor(drug))) +
@@ -171,7 +171,7 @@ plt_histogram <- pbc_numeric %>%
   scale_color_discrete(name = "Drug")
 
 plots <- c(plots, 
-           "plt_histogram")
+           "plt_freq")
 
 
 # Bar plot with Mayo risk score -------------------------------------------
