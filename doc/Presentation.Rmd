@@ -133,7 +133,7 @@ knitr::include_graphics("/cloud/project/results/plt_box_fu.png")
 knitr::include_graphics("/cloud/project/results/plt_drug.png")
 ```
 
-## Principle Component Analysis
+## Principal Component Analysis
 
 ```{r out.width = "100%", fig.align = "center"}
 knitr::include_graphics("/cloud/project/results/plt_pca.png")
