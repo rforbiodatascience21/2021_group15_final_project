@@ -86,7 +86,7 @@ bar1 <- pbc_data_aug %>%
   geom_bar(alpha = 0.5) +
   theme_classic() +
   labs(
-    title = "Barplot of participants in different stages",
+    title = "Participants in different stages",
     x = "Disease stage",
     y = "Count"
   ) +
@@ -103,7 +103,7 @@ bar2 <- pbc_data_aug %>%
   geom_bar(alpha = 0.5) +
   theme_classic() +
   labs(
-    title = "Barplot of participants in each treatment category",
+    title = "Participants in each treatment category",
     x = "Treatment",
     y = "Count",
     caption = "Data from https://hbiostat.org/data/"
@@ -151,7 +151,7 @@ plt_histogram <- pbc_numeric %>%
               labeller = labeller(key = variable_labs)) +
   theme_classic() +
   labs(
-    title = "Histograms of numeric attributes in the data set",
+    title = "Numeric attributes in the data set",
     x = "",
     y = "Count",
     caption = "Data from https://hbiostat.org/data/"
@@ -194,7 +194,7 @@ plt_bar_mayo <- pbc_data_aug %>%
   scale_fill_manual(
     labels = c(
       "High risk:\nMayo risk score > 10",
-      "Medium risk:\n8.5 < Mayo risk score > 10",
+      "Medium risk:\n8.5 < Mayo risk score < 10",
       "Low risk:\nMayo risk score < 8.5"
     ),
     name = "Mayo risk score level",
@@ -428,7 +428,7 @@ l <- mget(plots)
 # Save 
 invisible(mapply(
   ggsave,
-  file = paste0("results/", 
+  file = str_c("results/", 
                 names(l), 
                 ".png"),
   plot = l,

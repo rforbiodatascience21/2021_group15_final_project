@@ -69,9 +69,9 @@ assignments <-
 plt_clust <- assignments %>%  
   ggplot(mapping = aes(
     x = alk.phos,
-    y = mayo.risk,
-    color = .cluster)) +
-  geom_point(alpha = 0.8) + 
+    y = mayo.risk)) +
+  geom_point(mapping = aes(color = .cluster),
+             alpha = 0.8) + 
   facet_wrap(~ k)
 
 # We can then add centers of the cluster using the data from tidy():
@@ -147,7 +147,7 @@ l <- mget(plots)
 # Save
 invisible(mapply(
   ggsave,
-  file = paste0("results/", 
+  file = str_c("results/", 
                 names(l), 
                 ".png"),
   plot = l,
