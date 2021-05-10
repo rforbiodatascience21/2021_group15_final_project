@@ -133,6 +133,12 @@ knitr::include_graphics("/cloud/project/results/plt_box_fu.png")
 knitr::include_graphics("/cloud/project/results/plt_drug.png")
 ```
 
+## Principle component analysis
+
+```{r out.width = "100%", fig.align = "center"}
+knitr::include_graphics("/cloud/project/results/plt_pca.png")
+```
+
 ## Logistic regression
 
 ```{r out.width = "100%", fig.align = "center"}
