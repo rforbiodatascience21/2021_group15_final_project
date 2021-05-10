@@ -31,9 +31,9 @@ na_table2 <- pbc_data %>%
 # Table of missing values in data -----------------------------------------
 
 # Create a long table of the  missing values
-na_table1_long <- na_table1 %>%  
+na_table1_long <- na_table1 %>%
   pivot_longer(all_of(colnames(.)),
-               names_to = "Variable", 
+               names_to = "Variable",
                values_to = "NA in raw data")
 
 na_table2_long <- 
@@ -42,31 +42,38 @@ na_table2_long <-
                               values_to = "NA in clean data")
 
 # Joing the two tibbles
-na_values <- full_join(na_table1_long,na_table2_long,by="Variable")
+na_values <- full_join(na_table1_long, 
+                       na_table2_long, 
+                       by = "Variable")
 
 
 # Impute missing values ---------------------------------------------------
 
 # Mutate missing values by assigning the mean
 pbc_data <- pbc_data %>%
-  mutate_all(list(~ ifelse(is.na(.), mean(., na.rm = TRUE), .)))
+  mutate_all(list( ~ ifelse(is.na(.), 
+                            mean(., na.rm = TRUE), 
+                            .)))
 
 
 # Round off variables -----------------------------------------------------
 
 # Round down age to whole years
-pbc_data <- pbc_data %>% 
+pbc_data <- pbc_data %>%
   mutate(age = floor(age))
 
 # Round off numeric columns
-pbc_data <- pbc_data %>% 
-  mutate_if(is.numeric, round, digits = 2)
+pbc_data <- pbc_data %>%
+  mutate_if(is.numeric, 
+            round, 
+            digits = 2)
 
 
 # Write data --------------------------------------------------------------
 pbc_data_clean <- pbc_data
 
-write_csv(x = pbc_data_clean, file = "data/02_pbc_data_clean.csv")
+write_csv(x = pbc_data_clean, 
+          file = "data/02_pbc_data_clean.csv")
 
 # Create a table with NA values
 na_table <- na_values %>% 

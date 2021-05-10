@@ -116,9 +116,6 @@ knitr::include_graphics("/cloud/project/results/plt_bar_mayo.png")
 
 ## Results
 
-- Exploratory data analysis
-- Logistic regression
-- K-means Clustering
       
 ## Scatter plot of bilirubin
 ```{r out.width = "100%", fig.align = "center"}
@@ -136,16 +133,19 @@ knitr::include_graphics("/cloud/project/results/plt_box_fu.png")
 knitr::include_graphics("/cloud/project/results/plt_drug.png")
 ```
 
-## Logistic regression
+## Principal Component Analysis
+
+```{r out.width = "100%", fig.align = "center"}
+knitr::include_graphics("/cloud/project/results/plt_pca.png")
+```
+
+## Logistic Regression
 
 ```{r out.width = "100%", fig.align = "center"}
 knitr::include_graphics("/cloud/project/results/plt_conf.png")
 ```
 
 ## Clustering variance
-Some notes: 
-This represents the variance within the clusters. It decreases as k increases.
-If there is a bend, as in the article. The bend indicates that additional clusters beyond have little value. 
 
 ```{r out.width = "80%", fig.align = "center"}
 knitr::include_graphics("/cloud/project/results/plt_clust_var.png")
@@ -156,11 +156,9 @@ knitr::include_graphics("/cloud/project/results/plt_clust_var.png")
 knitr::include_graphics("/cloud/project/results/plt_clust_centers.png")
 ```
 
-## Discussion
-
-## Conclusion
-
-Some notes:
-We can conclude that we don't see a positive difference in participants given the drug and participants given placebo. 
-Other studies have shown that this drug may course liver problems, which may be the reason our plots show a tendency of people given the placebo living longer.
+## Discussion and conclusion 
+- Follow-up days
+- The intervals for mayo risk score 
+- Physiological variables 
+- Is the drug usable? 
 
