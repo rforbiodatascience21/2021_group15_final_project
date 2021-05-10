@@ -127,6 +127,7 @@ plots <- c(plots,
 # Histograms of numeric variables -----------------------------------------
 
 # Make tibble with all numeric columns and drug column
+# and remove columns that weren't in the original data set
 pbc_numeric <- pbc_data_aug %>%
   select(where(is.numeric), 
          drug) %>%
@@ -134,7 +135,7 @@ pbc_numeric <- pbc_data_aug %>%
          diuretic,
          edema.score,
          mayo.risk)) %>%
-  pivot_longer(-drug, 
+  pivot_longer(cols = -drug, 
                names_to = "key", 
                values_to = "value")
 
@@ -209,7 +210,6 @@ plt_bar_mayo <- pbc_data_aug %>%
                                 face = "italic"),
     plot.title.position = "plot",
     plot.caption.position = "plot",
-    legend.position = "right"
   ) +
   scale_x_discrete(labels = c(
     "low risk" = "Low risk",
@@ -266,7 +266,7 @@ point1 <- pbc_data_aug %>%
   )) +
   geom_point(size = 3) +
   theme_classic() +
-  labs(title = "Correlation between Serum Bilirubin \n and number of follow-up days",
+  labs(title = "Correlation between bilirubin\nand follow-up days",
        x = "Follow-up days",
        y = "Serum Bilirubin (mg/dL)") +
   theme(
@@ -274,8 +274,7 @@ point1 <- pbc_data_aug %>%
     plot.title.position = "plot",
     legend.position = "none"
   ) +
-  scale_shape_manual(values = c(15, 17), 
-                     name = "Sex") +
+  scale_shape_manual(values = c(15, 17)) +
   scale_color_manual(name = "Mayo risk score level",
                      values = alpha(c("red", 
                                       "blue", 
@@ -295,9 +294,9 @@ point2 <- pbc_data_aug %>%
   geom_point(size = 3) +
   theme_classic() +
   labs(
-    title = "Correlation between Serum Bilirubin \n and number of days to death",
+    title = "Correlation between bilirubin\nand days to death",
     x = "Days to death",
-    y = "Serum Bilirubin (mg/dl)",
+    y = "",
     caption = "Data from https://hbiostat.org/data/"
   ) +
   theme(
@@ -328,7 +327,7 @@ point2 <- pbc_data_aug %>%
     name = "Sex"
   )
 
-plt_bili_scatter <- (point1 | point2)
+plt_bili_scatter <- point1 | point2
 
 plots <- c(plots, 
            "plt_bili_scatter")
