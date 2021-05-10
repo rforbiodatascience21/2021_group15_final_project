@@ -30,7 +30,8 @@ pbc_data_aug <- pbc_data_aug %>%
 # Scale the data
 pbc_data_scaled <- pbc_data_aug %>% 
   mutate_if(is.numeric, 
-            scale) # scale subtracts the mean and divides by the sd 
+            scale) 
+# scale subtracts the mean and divides by the sd 
 
 
 # Logistic regression model -------------------------------------------------
