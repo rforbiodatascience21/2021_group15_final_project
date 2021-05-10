@@ -34,17 +34,19 @@ pbc_data_aug <- pbc_data_aug %>%
 
 # Nest the tibble to make the PCA more straight forward
 pbc_data_nested <- pbc_data_aug %>% 
-  nest(pbc_data=everything()) 
+  nest(pbc_data = everything()) 
 
 
 # PCA ---------------------------------------------------------------------
 
 # Make PCA and add augmented and tidied columns to the tibble
+# we don't include "drug" in the pca 
+# as this is the variable we are investigating
 pbc_data_pca <- pbc_data_nested %>%
   mutate(pca = map(pbc_data,
                    ~ prcomp(
                      .x %>% 
-                       select(-drug),
+                       select(-drug), 
                      center = TRUE,
                      scale = TRUE
                    ))) %>%
