@@ -333,9 +333,7 @@ plots <- c(plots,
            "plt_bili_scatter")
 
 
-# Boxplots with follow-up days --------------------------------------------
-
-# Boxplot of number of follow-up days
+# Boxplot with follow-up days --------------------------------------------
 plt_box_fu <- pbc_data_aug %>%
   ggplot(mapping = aes(
     x = fu.days,
@@ -345,9 +343,13 @@ plt_box_fu <- pbc_data_aug %>%
   theme_classic() +
   labs(title = "Boxplot of follow-up days",
        x = "Follow-up days", 
-       y = "Stage") +
+       y = "Stage",
+       caption = "Data from https://hbiostat.org/data/") +
   theme(text = element_text(size = 20),
-        plot.title.position = "plot") +
+        plot.caption = element_text(hjust = 1, 
+                                    face = "italic"),
+        plot.title.position = "plot",
+        plot.caption.position = "plot") +
   scale_fill_discrete(labels = c("0" = "Alive",
                                  "1" = "Dead"),
                       name = "Status")
@@ -357,6 +359,8 @@ plots <- c(plots,
 
 
 # Plots of drug distribution --------------------------------------------
+
+# Box plot of days to death
 plt_box_drug <- pbc_data_aug %>%
   filter(status == 1) %>%
   ggplot(mapping = aes(
@@ -366,7 +370,7 @@ plt_box_drug <- pbc_data_aug %>%
   geom_boxplot(alpha = 0.5) +
   theme_classic() +
   labs(
-    title = "Days to death",
+    title = "Boxplot of days to death",
     x = "Days to death", 
     y = "", 
     caption = "Data from https://hbiostat.org/data/"
@@ -385,7 +389,7 @@ plt_box_drug <- pbc_data_aug %>%
   scale_x_continuous(limits = c(0, 
                                 5000))
 
-
+# Barplot of status
 plt_bar_drug <- pbc_data_aug %>%
   ggplot(aes(
     x = status, 
@@ -394,7 +398,7 @@ plt_bar_drug <- pbc_data_aug %>%
            alpha = 0.5) +
   theme_classic() +
   labs(
-    title = "Drug distribution",
+    title = "Barplot of drug distribution",
     x = "Status",
     y = "Count"
   ) +
@@ -403,7 +407,6 @@ plt_bar_drug <- pbc_data_aug %>%
     plot.caption = element_text(hjust = 1, 
                                 face = "italic"),
     plot.title.position = "plot",
-    plot.caption.position = "plot", 
     legend.position = "none"
   ) +
   scale_fill_discrete(name = "Drug", 
