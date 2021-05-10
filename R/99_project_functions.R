@@ -16,12 +16,14 @@ factor_columns <- function(data) {
                                     levels =  c("low risk",
                                                 "medium risk",
                                                 "high risk"))) %>%
-    mutate(status = factor(status, levels = c(0, 
-                                              1))) %>% 
-    mutate(stage = factor(stage, levels = c(1, 
-                                            2, 
-                                            3, 
-                                            4)))
+    mutate(status = factor(status, 
+                           levels = c(0, 
+                                      1))) %>% 
+    mutate(stage = factor(stage, 
+                          levels = c(1, 
+                                     2, 
+                                     3, 
+                                     4)))
   return(data)
 }
 
