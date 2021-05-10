@@ -6,6 +6,7 @@ source(file = "R/04_EDA.R")
 source(file = "R/05_logistic_reg.R")
 source(file = "R/06_clustering.R")
 
+
 # Knit the Presentation slides --------------------------------------------
 rmarkdown::render('doc/Presentation.Rmd',output_file='Presentation.html')
 rmarkdown::render('doc/Presentation.Rmd',output_file='Presentation.html.gz')
